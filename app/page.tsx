@@ -126,22 +126,106 @@ const sections = [
 ]
 
 export default function Home() {
+  const iterationData = [
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '终端任务设定功能',
+      description: '完善终端任务设定功能，作为学生在学校终端进行持续互动的短周期激励机制，支持后台统一配置任务名称、任务图标、任务说明、任务条件、任务奖励、任务周期及适用学校范围。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '终端成长档案功能',
+      description: '完善终端成长档案功能，作为学校终端学生成长体系的基础能力，支持在学生被终端识别后自动建立成长档案，并随机生成原型头像和学生学校账号编号。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '学习之星设定功能',
+      description: '完善学习之星设定功能，作为学校终端互动结果中的竞争激励补充能力，支持后台按学校维度配置"本校学习之星"展示规则。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '评价功能限制功能',
+      description: '设置规则，不允许用户随意评价，乱填数字或符号，前端做好规则限制，字数 >= 8，至少包含 2 个汉字。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '首页版面调整',
+      description: '首页中间区域增加品牌展示区域，在后台前台管理新增首页品牌管理，支持对标题、icon、图标、跳转方式进行编辑修改。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '清新旅游的主页调整',
+      description: '根据业主需求，UI设计，设计清新旅游的机构主页。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '全部机构调整',
+      description: '首页全部机构名称换成：机构广场，根据产品需求，对页面排版重新设计。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '新增机构类型和标签功能',
+      description: '后台新增对机构的类型和标签进行管理设置，在管理后台新增编辑调整。'
+    },
+    {
+      version: '1.9.0版本',
+      date: '2026.03.11',
+      feature: '团市委相关周边设计',
+      description: '团市委相关盲盒包装、卡牌设计、IP形象设计。'
+    },
+  ]
+
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      {/* Header */}
+      {/* 迭代需求表格 */}
       <div className="border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="space-y-4">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="space-y-4 mb-6">
             <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
               <span className="h-2 w-2 rounded-full bg-blue-500" />
-              小黄鹿学园迭代需求
+              1.9.0 迭代需求
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900">
-              1.9.0迭代需求内容
-            </h1>
-            <p className="max-w-2xl text-lg text-slate-600">
-              研发迭代需求演示平台。
-            </p>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+              迭代功能清单
+            </h2>
+          </div>
+          <div className="overflow-x-auto rounded-lg border border-slate-200">
+            <table className="min-w-full border-collapse">
+              <thead className="bg-slate-900 text-white">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">迭代版本</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">日期</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">迭代功能点</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">功能需求描述</th>
+                </tr>
+              </thead>
+              <tbody>
+                {iterationData.map((item, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                    {idx === 0 && (
+                      <td rowSpan={iterationData.length} className="px-4 py-3 text-sm font-semibold text-slate-900 whitespace-nowrap border-r border-slate-200 align-top">
+                        {item.version}
+                      </td>
+                    )}
+                    {idx === 0 && (
+                      <td rowSpan={iterationData.length} className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap border-r border-slate-200 align-top">
+                        {item.date}
+                      </td>
+                    )}
+                    <td className="px-4 py-3 text-sm font-semibold text-slate-900 whitespace-nowrap">{item.feature}</td>
+                    <td className="px-4 py-3 text-sm text-slate-600 max-w-md">{item.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

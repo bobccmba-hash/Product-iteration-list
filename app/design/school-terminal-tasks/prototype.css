@@ -1,0 +1,147 @@
+/* 学校终端互动任务目标 - 原型设计 Token（与 Figma 规范一致） */
+:root {
+  --task-green: #4CAF50;
+  --task-yellow: #FFC857;
+  --task-blue: #4A90E2;
+  --bg-page: #F5F6F8;
+  --bg-card: #FFFFFF;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B7280;
+  --text-tertiary: #9CA3AF;
+  --progress-bg: #E5E7EB;
+  --success: #22C55E;
+  --overlay: rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-tag: 8px;
+  --safe-top: 59px;
+  --safe-bottom: 34px;
+  --padding-x: 24px;
+}
+
+/* 画板尺寸 390×844 pt，缩放以适应预览 */
+.device-frame {
+  width: 390px;
+  height: 844px;
+  background: var(--bg-page);
+  border-radius: 40px;
+  box-shadow: 0 0 0 12px #1a1a1a, 0 0 0 14px #333, 0 24px 48px rgba(0,0,0,0.2);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.device-frame .screen {
+  width: 100%;
+  height: 100%;
+  padding: var(--safe-top) var(--padding-x) var(--safe-bottom);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.screen-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--progress-bg);
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--task-green);
+  transition: width 0.3s ease;
+}
+
+.btn-primary {
+  height: 52px;
+  border-radius: var(--radius-btn);
+  background: var(--task-green);
+  color: white;
+  border: none;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-primary.yellow {
+  background: var(--task-yellow);
+  color: #1A1A1A;
+}
+
+.task-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.task-card .icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(76, 175, 80, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.task-card .icon-wrap svg {
+  width: 28px;
+  height: 28px;
+  color: var(--task-green);
+}
+
+.task-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.task-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 12px 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-tag);
+  font-size: 13px;
+  background: rgba(255, 200, 87, 0.25);
+  color: #B45309;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 24px 0;
+}
+
+.spacer {
+  flex: 1;
+  min-height: 16px;
+}

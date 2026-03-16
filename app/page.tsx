@@ -1,65 +1,216 @@
-import Image from "next/image";
+import Link from 'next/link'
+
+const prdDocs = [
+  {
+    title: '学校终端流程',
+    desc: '完整的用户交互流程设计，涵盖新老用户路径与成长反馈机制。',
+    href: '/prd/terminal',
+    pill: '前台',
+  },
+  {
+    title: '任务配置后台',
+    desc: '任务规则的配置与分发管理平台。',
+    href: '/prd/admin-config',
+    pill: '后台',
+  },
+  {
+    title: '排行榜系统',
+    desc: '学习之星排行榜的规则配置与展示逻辑。',
+    href: '/prd/ranking',
+    pill: '后台',
+  },
+  {
+    title: '成长档案',
+    desc: '学生成长档案、事件流水与统计视图。',
+    href: '/prd/growth-data',
+    pill: '数据',
+  },
+  {
+    title: '评论规则管理',
+    desc: '配置评论审核规则、灌水识别、提示文案等内容管理策略。',
+    href: '/prd/comment-rules',
+    pill: '后台',
+  },
+  {
+    title: '首页品牌管理',
+    desc: '配置首页品牌展示区域、标题、布局与品牌卡片跳转。',
+    href: '/prd/home-brand',
+    pill: '后台',
+  },
+  {
+    title: '机构类型管理',
+    desc: '创建和管理机构类型分类，支持新增、编辑、删除操作。',
+    href: '/prd/org-types',
+    pill: '系统',
+  },
+  {
+    title: '机构标签管理',
+    desc: '管理机构特征标签，支持多选标签为机构分类和筛选。',
+    href: '/prd/org-tags',
+    pill: '系统',
+  },
+  {
+    title: '认证标识管理',
+    desc: '管理机构认证、推荐、活动等标识，支持图片上传和状态控制。',
+    href: '/prd/org-badges',
+    pill: '系统',
+  },
+  {
+    title: '新建机构',
+    desc: '创建新机构并配置类型、标签、认证标识、部门、地址等信息。',
+    href: '/prd/org-create',
+    pill: '系统',
+  },
+]
+
+const sections = [
+  {
+    title: '交互原型',
+    icon: '🎨',
+    desc: '前端交互设计与用户体验原型',
+    items: [
+      {
+        title: '新用户流程',
+        desc: '首次使用的完整体验路径（9:16 竖屏）。',
+        href: '/terminal/welcome?type=new',
+      },
+      {
+        title: '老用户流程',
+        desc: '返回用户的欢迎与任务展示流程。',
+        href: '/terminal/welcome?type=returning',
+      },
+      {
+        title: '简化流程',
+        desc: '无成长系统的基础互动体验。',
+        href: '/terminal/welcome?type=no-growth',
+      },
+    ],
+  },
+  {
+    title: '管理系统',
+    icon: '🛠️',
+    desc: '产品运营与数据管理后台',
+    items: [
+      {
+        title: '任务设定管理',
+        desc: '任务规则的配置与发布。',
+        href: '/admin/config/tasks',
+      },
+      {
+        title: '学习之星管理',
+        desc: '学习之星规则配置与样式自定义。',
+        href: '/admin/ranking',
+      },
+      {
+        title: '学生成长档案',
+        desc: '学生成长档案查询与分析。',
+        href: '/admin/data/growth',
+      },
+      {
+        title: '评论规则管理',
+        desc: '配置评论校验规则、灌水识别、提示文案。',
+        href: '/admin/comment-rules',
+      },
+      {
+        title: '首页品牌管理',
+        desc: '配置首页品牌展示区域：标题、布局与品牌卡片跳转。',
+        href: '/admin/home-brand',
+      },
+      {
+        title: '机构标签管理',
+        desc: '为机构建立可扩展的分类、特征与认证体系。',
+        href: '/admin/system/org-types',
+      },
+    ],
+  },
+]
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-white text-slate-900">
+      {/* Header */}
+      <div className="border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
+              小黄鹿学园迭代需求
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900">
+              1.9.0迭代需求内容
+            </h1>
+            <p className="max-w-2xl text-lg text-slate-600">
+              研发迭代需求演示平台。
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Main Content */}
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Sections */}
+        <div className="grid gap-8">
+          {sections.map((section) => (
+            <section key={section.title} className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{section.icon}</span>
+                  <h2 className="text-2xl font-bold text-slate-900">{section.title}</h2>
+                </div>
+                <p className="text-slate-600">{section.desc}</p>
+              </div>
+              <div className={`grid gap-3 ${section.title === '管理系统' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-1 lg:grid-cols-2'}`}>
+                {section.items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="group block rounded-lg border border-slate-200 bg-white p-4 transition hover:border-blue-300 hover:bg-blue-50"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-slate-900 group-hover:text-blue-700">
+                          {item.title}
+                        </h3>
+                        <p className="mt-1 text-sm text-slate-600">{item.desc}</p>
+                      </div>
+                      <div className="text-slate-400 group-hover:text-blue-600">→</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
-      </main>
-    </div>
-  );
+
+        {/* PRD Docs */}
+        <div className="mt-16 space-y-6 border-t border-slate-200 pt-12">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-slate-900">产品文档</h2>
+            <p className="text-slate-600">完整的需求说明与设计规范，支持开发与设计评审。</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {prdDocs.map((doc) => (
+              <Link
+                key={doc.href}
+                href={doc.href}
+                className="group rounded-lg border border-slate-200 bg-white p-4 transition hover:border-blue-300 hover:shadow-md"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-semibold text-slate-900 group-hover:text-blue-700">
+                      {doc.title}
+                    </h3>
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700 group-hover:bg-blue-100 group-hover:text-blue-700">
+                      {doc.pill}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-600">{doc.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </main>
+  )
 }

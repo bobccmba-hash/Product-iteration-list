@@ -2,16 +2,6 @@ import Link from 'next/link'
 
 const versions = [
   {
-    version: '1.9.0',
-    title: '1.9.0 迭代需求',
-    date: '2026.03.11',
-    desc: '终端任务设定、成长档案、学习之星、评价限制、首页品牌管理、机构类型标签等功能迭代。',
-    href: '/v1.9.0',
-    status: '已完成',
-    statusColor: 'bg-green-100 text-green-700',
-    count: 9,
-  },
-  {
     version: '1.9.1',
     title: '1.9.1 迭代需求',
     date: '待定',
@@ -20,6 +10,16 @@ const versions = [
     status: '规划中',
     statusColor: 'bg-slate-100 text-slate-500',
     count: 0,
+  },
+  {
+    version: '1.9.0',
+    title: '1.9.0 迭代需求',
+    date: '2026.03.11',
+    desc: '终端任务设定、成长档案、学习之星、评价限制、首页品牌管理、机构类型标签等功能迭代。',
+    href: '/v1.9.0',
+    status: '已完成',
+    statusColor: 'bg-green-100 text-green-700',
+    count: 9,
   },
 ]
 

@@ -29,7 +29,7 @@ export default function RankingPopupPage() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 px-4">
       {/* 返回首页 */}
-      <Link href="/" className="fixed left-4 top-4 z-50 rounded-xl bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/20">
+      <Link href="/v1.9.0" className="fixed left-4 top-4 z-50 rounded-xl bg-white/10 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/20">
         返回首页
       </Link>
 

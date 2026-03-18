@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Button } from '@/components/admin/AdminPrimitives'
+import { rankingStore } from '@/utils/rankingStore'
 
 export default function RankingCreatePage() {
   const [configName, setConfigName] = useState('')
@@ -84,67 +85,30 @@ export default function RankingCreatePage() {
               <div>
                 <label className="mb-1 block text-sm font-bold text-slate-700">展示人数</label>
                 <div className="flex items-center gap-2">
-                  <input type="number" value={topN} onChange={(e) => setTopN(Number(e.target.value))} min={1} max={50}
-                    className="w-28 rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none" />
-                  <div className="flex gap-2">
-                    {[3, 5, 10].map((n) => (
-                      <button key={n} onClick={() => setTopN(n)}
-                        className={`rounded-lg px-3 py-1 text-xs font-bold transition ${
-                          topN === n ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                        }`}>{n}</button>
-                    ))}
-                  </div>
+                  <input type="number" value={10} disabled
+                    className="w-28 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500" />
+                  <span className="text-xs text-slate-500">人（固定）</span>
                 </div>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-bold text-slate-700">分数计算规则</label>
-                <div className="flex flex-col gap-2">
-                  <label className="flex items-start gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:bg-slate-50">
-                    <input type="radio" value="highest_score" checked={scoreCriteria === 'highest_score'} onChange={() => setScoreCriteria('highest_score')} className="mt-0.5" />
-                    <div>
-                      <div className="text-sm font-bold text-slate-800">历史最高分 ⭐ 推荐</div>
-                      <div className="text-xs text-slate-500">学生多次参与同一游戏，取历史最高得分展示，数据稳定</div>
-                    </div>
-                  </label>
-                  <label className="flex items-start gap-3 rounded-xl border border-slate-200 p-3 cursor-pointer hover:bg-slate-50">
-                    <input type="radio" value="latest_score" checked={scoreCriteria === 'latest_score'} onChange={() => setScoreCriteria('latest_score')} className="mt-0.5" />
-                    <div>
-                      <div className="text-sm font-bold text-slate-800">最近一次得分</div>
-                      <div className="text-xs text-slate-500">取学生最近一次参与该游戏的得分，实时反映最新表现</div>
-                    </div>
-                  </label>
+                <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <input type="radio" checked readOnly className="mt-0.5" />
+                  <div>
+                    <div className="text-sm font-bold text-slate-800">以成绩最高分推荐</div>
+                    <div className="text-xs text-slate-500">取历史最高得分展示，数据稳定</div>
+                  </div>
                 </div>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-bold text-slate-700">展示内容</label>
                 <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
-                  {[
-                    { id: 'showAvatar', label: '学生头像', val: showAvatar, set: setShowAvatar },
-                    { id: 'showStudentCode', label: '学生编号', val: showStudentCode, set: setShowStudentCode },
-                    { id: 'showScore', label: '互动分数', val: showScore, set: setShowScore },
-                    { id: 'showMyPerformance', label: '我的学习表现', val: showMyPerformance, set: setShowMyPerformance },
-                    { id: 'showCurrentScore', label: '本次得分', val: showCurrentScore, set: setShowCurrentScore },
-                  ].map((item) => (
-                    <label key={item.id} className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={item.val} onChange={(e) => item.set(e.target.checked)} className="h-4 w-4 rounded border-slate-300" />
-                      <span className="text-sm text-slate-700">{item.label}</span>
-                    </label>
+                  {['学生头像', '学生编号', '互动分数', '我的学习表现', '本次得分'].map((label) => (
+                    <div key={label} className="flex items-center gap-2">
+                      <input type="checkbox" checked readOnly className="h-4 w-4 rounded border-slate-300" />
+                      <span className="text-sm text-slate-700">{label}</span>
+                    </div>
                   ))}
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm font-bold text-slate-700">最低参与人数阈值</label>
-                  <input type="number" value={minStudents} onChange={(e) => setMinStudents(Number(e.target.value))} min={1}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none" />
-                  <p className="mt-1 text-xs text-slate-500">未达阈值时由下方开关决定展示行为</p>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-bold text-slate-700">人数不足时</label>
-                  <div className="flex items-center gap-3 rounded-xl border border-slate-200 p-3">
-                    <input type="checkbox" id="showWhenInsufficient" checked={showWhenInsufficient} onChange={(e) => setShowWhenInsufficient(e.target.checked)} className="h-4 w-4" />
-                    <label htmlFor="showWhenInsufficient" className="text-sm text-slate-700">仍展示（显示"学习之星即将开启"）</label>
-                  </div>
                 </div>
               </div>
             </div>
@@ -236,13 +200,42 @@ export default function RankingCreatePage() {
       {/* 底部操作栏 */}
       <div className="sticky bottom-4 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
         <div className="flex flex-wrap items-center gap-3">
-          <Button tone="primary" onClick={() => window.alert('原型占位：保存配置（草稿）')}>
+          <Button tone="primary" onClick={() => {
+            if (!configName.trim()) {
+              window.alert('请填写配置名称')
+              return
+            }
+            const newId = `rank_${Date.now()}`
+            rankingStore.addConfig({
+              id: newId,
+              name: configName,
+              rankingType: '本校学习之星',
+              rankingBasis: '单次游戏分数',
+              targetGame: 'ar_pose',
+              displayEnabled: false,
+              topN: 10,
+              status: 'draft',
+              updatedAt: new Date().toLocaleString('zh-CN', { hour12: false }).replace(/\//g, '-').slice(0, 16),
+              activeTerminalCount: 0,
+              showAvatar: true,
+              showStudentCode: true,
+              showScore: true,
+              showMyPerformance: true,
+              showCurrentScore: true,
+              scoreCriteria: 'highest_score',
+              title,
+              subtitle,
+              myPerformanceHint,
+              notShownHint,
+              encourageText,
+              minStudents: 3,
+              showWhenInsufficient: false,
+            })
+            window.location.href = '/admin/ranking'
+          }}>
             保存为草稿
           </Button>
-          <Button tone="primary" onClick={() => window.alert('原型占位：发布配置')}>
-            发布配置
-          </Button>
-          <Button tone="secondary" onClick={() => window.alert('原型占位：取消')}>
+          <Button tone="secondary" onClick={() => window.location.href = '/admin/ranking'}>
             取消
           </Button>
           <div className="ml-auto text-xs text-slate-500">

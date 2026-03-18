@@ -5,7 +5,7 @@ export default function PrdOrgTypesPage() {
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         <div className="mb-6 flex items-center justify-between gap-4">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-base font-bold text-slate-500 hover:text-slate-900">
+          <Link href="/v1.9.0" className="inline-flex items-center gap-1.5 text-base font-bold text-slate-500 hover:text-slate-900">
             ← 返回首页
           </Link>
           <div className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 text-sm font-semibold text-slate-50">
@@ -219,7 +219,7 @@ export default function PrdOrgTypesPage() {
           </section>
 
           <div className="flex justify-center pt-6">
-            <Link href="/" className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-8 py-3 text-base font-bold text-white hover:bg-indigo-700">
+            <Link href="/v1.9.0" className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-8 py-3 text-base font-bold text-white hover:bg-indigo-700">
               ← 返回首页
             </Link>
           </div>

@@ -14,7 +14,7 @@ export default function GrowthDetailPage() {
     <div className="relative flex min-h-screen flex-col bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 px-6 py-8 text-white">
       {/* 返回首页按钮 */}
       <Link
-        href="/"
+        href="/v1.9.0"
         className="fixed left-4 top-4 z-50 rounded-xl bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/30"
       >
         返回首页

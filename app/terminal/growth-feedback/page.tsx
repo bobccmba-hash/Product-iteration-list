@@ -47,7 +47,7 @@ export default function GrowthFeedbackPage() {
   return (
     <>
       <Link
-        href="/"
+        href="/v1.9.0"
         className="fixed left-4 top-4 z-50 rounded-xl bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/30"
       >
         返回首页

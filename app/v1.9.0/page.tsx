@@ -36,15 +36,15 @@ const sections = [
 ]
 
 const iterationData = [
-  { feature: '终端任务设定功能', description: '完善终端任务设定功能，作为学生在学校终端进行持续互动的短周期激励机制。' },
-  { feature: '终端成长档案功能', description: '完善终端成长档案功能，支持在学生被终端识别后自动建立成长档案。' },
-  { feature: '学习之星设定功能', description: '完善学习之星设定功能，支持后台按学校维度配置展示规则。' },
-  { feature: '评价功能限制功能', description: '设置规则，不允许用户随意评价，字数 >= 8，至少包含 2 个汉字。' },
-  { feature: '首页版面调整', description: '首页中间区域增加品牌展示区域，新增首页品牌管理。' },
-  { feature: '清新旅游的主页调整', description: '根据业主需求，UI设计，设计清新旅游的机构主页。' },
-  { feature: '全部机构调整', description: '首页全部机构名称换成：机构广场，对页面排版重新设计。' },
-  { feature: '新增机构类型和标签功能', description: '后台新增对机构的类型和标签进行管理设置。' },
-  { feature: '团市委相关周边设计', description: '团市委相关盲盒包装、卡牌设计、IP形象设计。' },
+  { feature: '终端任务设定功能', href: '/admin/config/tasks', description: '完善终端任务设定功能，作为学生在学校终端进行持续互动的短周期激励机制。' },
+  { feature: '终端成长档案功能', href: '/admin/data/growth', description: '完善终端成长档案功能，支持在学生被终端识别后自动建立成长档案。' },
+  { feature: '学习之星设定功能', href: '/admin/ranking', description: '完善学习之星设定功能，支持后台按学校维度配置展示规则。' },
+  { feature: '评价功能限制功能', href: '/admin/comment-rules', description: '设置规则，不允许用户随意评价，字数 >= 8，至少包含 2 个汉字。' },
+  { feature: '首页版面调整', href: '/admin/home-brand', description: '首页中间区域增加品牌展示区域，新增首页品牌管理。' },
+  { feature: '清新旅游的主页调整', href: null, description: '根据业主需求，UI设计，设计清新旅游的机构主页。' },
+  { feature: '全部机构调整', href: null, description: '首页全部机构名称换成：机构广场，对页面排版重新设计。' },
+  { feature: '新增机构类型和标签功能', href: '/admin/system/org-types', description: '后台新增对机构的类型和标签进行管理设置。' },
+  { feature: '团市委相关周边设计', href: null, description: '团市委相关盲盒包装、卡牌设计、IP形象设计。' },
 ]
 
 export default function V190Page() {
@@ -78,7 +78,13 @@ export default function V190Page() {
                   <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                     {idx === 0 && <td rowSpan={iterationData.length} className="px-4 py-3 text-sm font-semibold text-slate-900 whitespace-nowrap border-r border-slate-200 align-middle text-center">1.9.0版本</td>}
                     {idx === 0 && <td rowSpan={iterationData.length} className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap border-r border-slate-200 align-middle text-center">2026.03.11</td>}
-                    <td className="px-4 py-3 text-sm font-semibold text-slate-900 whitespace-nowrap">{item.feature}</td>
+                    <td className="px-4 py-3 text-sm font-semibold text-slate-900 whitespace-nowrap">
+                      {item.href ? (
+                        <Link href={item.href} className="text-blue-600 hover:text-blue-800 hover:underline">{item.feature}</Link>
+                      ) : (
+                        item.feature
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-sm text-slate-600 max-w-md">{item.description}</td>
                   </tr>
                 ))}

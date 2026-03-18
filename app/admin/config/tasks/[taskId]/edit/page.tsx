@@ -11,8 +11,6 @@ type FormState = {
   desc: string
   type: TaskType
   cycle: TaskCycle
-  isMain: boolean
-  repeatable: boolean
   offline: boolean
   frontendTitle: string
   frontendShortDesc: string
@@ -33,8 +31,6 @@ export default function TaskEditPage() {
     desc: '任务说明（示例）',
     type: base?.type ?? 'count',
     cycle: base?.cycle ?? 'daily',
-    isMain: true,
-    repeatable: true,
     offline: base?.offline === 'supported',
     frontendTitle: '我的小任务',
     frontendShortDesc: '再来一次就能完成啦！',
@@ -151,21 +147,7 @@ export default function TaskEditPage() {
                 ))}
               </div>
             </Field>
-            <Field label="主任务标记">
-              <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-                <input type="checkbox" checked={form.isMain} onChange={(e) => update('isMain', e.target.checked)} className="h-4 w-4" />
-                <span className="text-sm font-semibold text-slate-800">作为当前主任务展示</span>
-              </label>
-              <p className="mt-1 text-xs text-slate-500">
-                勾选后，该任务会作为学生当前的「主任务」出现在终端首页；首期建议仅为少量核心任务打上主任务标记。
-              </p>
-            </Field>
-            <Field label="是否可重复完成">
-              <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-                <input type="checkbox" checked={form.repeatable} onChange={(e) => update('repeatable', e.target.checked)} className="h-4 w-4" />
-                <span className="text-sm font-semibold text-slate-800">完成后可再次分配</span>
-              </label>
-            </Field>
+
           </div>
 
           <div className="mt-8">

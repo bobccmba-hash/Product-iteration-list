@@ -11,7 +11,7 @@ export default function InteractionResultPage() {
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 px-6 text-white">
       {/* 返回首页按钮 */}
       <Link
-        href="/"
+        href="/v1.9.0"
         className="fixed left-4 top-4 z-50 rounded-xl bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/30"
       >
         返回首页

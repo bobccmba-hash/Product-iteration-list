@@ -14,7 +14,10 @@ const nav = [
   },
   {
     title: '学习之星管理',
-    items: [{ href: '/admin/ranking', label: '学习之星管理' }],
+    items: [
+      { href: '/admin/ranking', label: '学习之星配置' },
+      { href: '/admin/ranking/school-board', label: '学校榜单管理' },
+    ],
   },
   {
     title: '系统机构管理',
@@ -40,12 +43,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto flex min-h-screen max-w-[1400px]">
-        <aside className="hidden w-[260px] flex-col gap-6 border-r border-slate-200 bg-white p-5 md:flex">
+        <aside className="hidden w-[260px] shrink-0 flex-col gap-6 border-r border-slate-200 bg-white p-5 md:flex">
           <div className="flex items-center justify-between">
             <Link href="/admin" className="text-sm font-black tracking-wide text-slate-900">
               学校终端 · 后台
             </Link>
-            <Link href="/" className="text-xs font-semibold text-slate-500 hover:text-slate-900">
+            <Link href="/v1.9.0" className="text-xs font-semibold text-slate-500 hover:text-slate-900">
               返回前台
             </Link>
           </div>
@@ -59,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       key={it.href}
                       href={it.href}
                       className={`rounded-lg px-3 py-2 text-sm font-semibold ${
-                        pathname?.startsWith(it.href)
+                        pathname === it.href || (it.href !== '/admin/ranking' && pathname?.startsWith(it.href))
                           ? 'bg-slate-900 text-white'
                           : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
                       }`}

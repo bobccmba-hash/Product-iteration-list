@@ -88,27 +88,25 @@ export default function GrowthListPage() {
               <tr>
                 <th className="px-3 py-3 sm:px-4">学生编号</th>
                 <th className="hidden sm:table-cell px-3 py-3 sm:px-4">面板照片</th>
-                <th className="px-3 py-3 sm:px-4">昵称/展示名</th>
                 <th className="hidden md:table-cell px-3 py-3 sm:px-4">年龄</th>
                 <th className="hidden md:table-cell px-3 py-3 sm:px-4">性别</th>
                 <th className="px-3 py-3 sm:px-4">学校</th>
                 <th className="hidden lg:table-cell px-3 py-3 sm:px-4">
                   <div className="flex items-center gap-1">
-                    <span>学校账户编号</span>
+                    <span>设备编号</span>
                     <button
                       type="button"
                       onClick={() => {
                         alert(
-                          '学校账户编号命名规则：\n\n' +
-                            '格式：[设备编号后5位]-[学校用户编号]\n\n' +
-                            '• 设备编号后5位：5位数字（如 00123）\n' +
-                            '• 学校用户编号：2个英文字母 + 3个数字（如 ab456）\n' +
-                            '  - 前2位：26个英文字母随机搭配\n' +
-                            '  - 后3位：001-999随机搭配\n\n' +
-                            '示例：00123-ab456\n' +
-                            '• 00123 = 设备编号的后5位\n' +
-                            '• ab456 = 该学生在学校的用户编号\n\n' +
-                            '注：终端设备上只显示"-"后面的部分（如 ab456），管理后台显示完整编号。'
+                          '设备编号命名规则：\n\n' +
+                            '格式：[设备ID]-[2个英文字母][3位数字]\n\n' +
+                            '• 设备ID：终端设备的唯一标识\n' +
+                            '• 2个英文字母：26个英文字母随机组合\n' +
+                            '• 3位数字：001-999随机数字\n\n' +
+                            '示例：DEV001-ab456\n' +
+                            '• DEV001 = 设备ID\n' +
+                            '• ab = 随机2个英文字母\n' +
+                            '• 456 = 001-999随机三位数字'
                         )
                       }}
                       className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-slate-300 text-[10px] font-bold text-slate-700 hover:bg-slate-400"
@@ -118,7 +116,6 @@ export default function GrowthListPage() {
                     </button>
                   </div>
                 </th>
-                <th className="hidden lg:table-cell px-3 py-3 sm:px-4">设备编号</th>
                 <th className="hidden lg:table-cell px-3 py-3 sm:px-4">创建时间</th>
                 <th className="hidden md:table-cell px-3 py-3 sm:px-4">首次互动时间</th>
                 <th className="hidden md:table-cell px-3 py-3 sm:px-4">最近互动时间</th>
@@ -127,7 +124,6 @@ export default function GrowthListPage() {
                 <th className="hidden lg:table-cell px-3 py-3 sm:px-4">当前任务</th>
                 <th className="px-3 py-3 sm:px-4">状态</th>
                 <th className="px-3 py-3 sm:px-4">绑定微信</th>
-                <th className="hidden sm:table-cell px-3 py-3 sm:px-4">同步状态</th>
                 <th className="px-3 py-3 sm:px-4">操作</th>
               </tr>
             </thead>
@@ -151,9 +147,6 @@ export default function GrowthListPage() {
 }
 
 function GrowthRow({ s }: { s: StudentGrowthSummary }) {
-  const syncTone: 'success' | 'warning' | 'danger' = s.syncStatus === 'ok' ? 'success' : s.syncStatus === 'pending' ? 'warning' : 'danger'
-  const syncLabel = s.syncStatus === 'ok' ? '正常' : s.syncStatus === 'pending' ? '待同步' : '失败'
-
   return (
     <tr className="hover:bg-slate-50/60">
       <td className="px-3 py-3 sm:px-4 font-mono text-[11px] sm:text-xs">{s.studentId}</td>
@@ -165,12 +158,10 @@ function GrowthRow({ s }: { s: StudentGrowthSummary }) {
           </div>
         </div>
       </td>
-      <td className="px-3 py-3 sm:px-4 font-semibold text-slate-900">{s.displayName}</td>
       <td className="hidden md:table-cell px-3 py-3 sm:px-4 text-slate-700">{s.age ?? '—'}</td>
       <td className="hidden md:table-cell px-3 py-3 sm:px-4 text-slate-700">{s.gender ?? '—'}</td>
       <td className="px-3 py-3 sm:px-4 text-slate-700">{s.school}</td>
       <td className="hidden lg:table-cell px-3 py-3 sm:px-4 text-slate-700">{s.schoolAccountId ?? '—'}</td>
-      <td className="hidden lg:table-cell px-3 py-3 sm:px-4 font-mono text-xs">{s.deviceId ?? '—'}</td>
       <td className="hidden lg:table-cell px-3 py-3 sm:px-4 text-slate-700">{s.createdAt ?? '—'}</td>
       <td className="hidden md:table-cell px-3 py-3 sm:px-4 text-slate-700">{s.firstAt}</td>
       <td className="hidden md:table-cell px-3 py-3 sm:px-4 text-slate-700">{s.lastAt}</td>
@@ -182,12 +173,6 @@ function GrowthRow({ s }: { s: StudentGrowthSummary }) {
       </td>
       <td className="px-3 py-3 sm:px-4">
         <Tag tone={s.wechatBound ? 'success' : 'neutral'}>{s.wechatBound ? '已绑定' : '未绑定'}</Tag>
-      </td>
-      <td className="hidden sm:table-cell px-3 py-3 sm:px-4">
-        <div className="flex items-center gap-2">
-          <Tag tone={syncTone}>{syncLabel}</Tag>
-          {s.hasUnsynced && <Tag tone="warning">未同步</Tag>}
-        </div>
       </td>
       <td className="px-3 py-3 sm:px-4">
         <Link href={`/admin/data/growth/${encodeURIComponent(s.studentId)}`} className="text-xs font-bold text-slate-700 hover:text-slate-900">

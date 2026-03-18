@@ -40,10 +40,9 @@ export default function OrgCreatePage() {
   ]
 
   const departments = [
-    { id: '1', name: '教育部门' },
-    { id: '2', name: '卫生部门' },
-    { id: '3', name: '文化部门' },
-    { id: '4', name: '体育部门' },
+    { id: '1', name: '总部' },
+    { id: '2', name: '西安' },
+    { id: '3', name: '其他' },
   ]
 
   const tags = [
@@ -74,9 +73,7 @@ export default function OrgCreatePage() {
   const handleBadgeToggle = (badgeId: string) => {
     setFormData({
       ...formData,
-      badges: formData.badges.includes(badgeId)
-        ? formData.badges.filter(b => b !== badgeId)
-        : [...formData.badges, badgeId]
+      badges: formData.badges.includes(badgeId) ? [] : [badgeId]
     })
   }
 
@@ -134,13 +131,24 @@ export default function OrgCreatePage() {
         </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-3">
-        {/* 主表单区域 */}
-        <div className="lg:col-span-2 rounded-2xl bg-white p-6 ring-1 ring-slate-200 space-y-6">
+      <div className="rounded-2xl bg-white p-6 ring-1 ring-slate-200 space-y-6">
           {/* 基础信息 */}
           <div>
             <h2 className="text-lg font-bold mb-4">基础信息</h2>
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold mb-1">所属部门</label>
+                <select
+                  value={formData.department}
+                  onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                >
+                  <option value="">请选择部门</option>
+                  {departments.map(d => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <label className="block text-sm font-bold mb-1">机构名称 *</label>
                 <input
@@ -151,33 +159,68 @@ export default function OrgCreatePage() {
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
                 />
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
-                  <label className="block text-sm font-bold mb-1">机构类型 *</label>
-                  <select
-                    value={formData.type}
-                    onChange={handleTypeChange}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  >
-                    <option value="">请选择机构类型</option>
-                    {types.map(t => (
-                      <option key={t.id} value={t.id}>{t.name}</option>
+              <div>
+                <label className="block text-sm font-bold mb-1">机构类型 *</label>
+                <select
+                  value={formData.type}
+                  onChange={handleTypeChange}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                >
+                  <option value="">请选择机构类型</option>
+                  {types.map(t => (
+                    <option key={t.id} value={t.id}>{t.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-1">选择标签</label>
+                <select
+                  value=""
+                  onChange={(e) => { if (e.target.value) handleTagToggle(e.target.value) }}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                >
+                  <option value="">请选择标签（可多选）</option>
+                  {tags.map(t => (
+                    <option key={t.id} value={t.id}>
+                      {formData.tags.includes(t.id) ? '✓ ' : ''}{t.name}
+                    </option>
+                  ))}
+                </select>
+                {formData.tags.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {formData.tags.map(id => (
+                      <span key={id} className="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-700">
+                        {tags.find(t => t.id === id)?.name}
+                        <button type="button" onClick={() => handleTagToggle(id)} className="ml-1 text-indigo-400 hover:text-indigo-700">✕</button>
+                      </span>
                     ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold mb-1">所属部门</label>
-                  <select
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  >
-                    <option value="">请选择部门</option>
-                    {departments.map(d => (
-                      <option key={d.id} value={d.id}>{d.name}</option>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-1">选择认证标识</label>
+                <select
+                  value=""
+                  onChange={(e) => { if (e.target.value) handleBadgeToggle(e.target.value) }}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                >
+                  <option value="">请选择认证标识</option>
+                  {badges.map(b => (
+                    <option key={b.id} value={b.id}>
+                      {formData.badges.includes(b.id) ? '✓ ' : ''}{b.name}
+                    </option>
+                  ))}
+                </select>
+                {formData.badges.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {formData.badges.map(id => (
+                      <span key={id} className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                        {badges.find(b => b.id === id)?.name}
+                        <button type="button" onClick={() => handleBadgeToggle(id)} className="ml-1 text-green-400 hover:text-green-700">✕</button>
+                      </span>
                     ))}
-                  </select>
-                </div>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-bold mb-1">机构描述</label>
@@ -243,62 +286,6 @@ export default function OrgCreatePage() {
             </Button>
           </div>
         </div>
-
-        {/* 侧边栏 - 标签和认证标识 */}
-        <div className="space-y-5">
-          {/* 标签选择 */}
-          <div className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="text-lg font-bold mb-4">选择标签</h2>
-            <div className="space-y-2">
-              {tags.map(tag => (
-                <button
-                  key={tag.id}
-                  onClick={() => handleTagToggle(tag.id)}
-                  className={`w-full px-4 py-2 rounded-lg text-sm font-bold transition text-left ${
-                    formData.tags.includes(tag.id)
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  {formData.tags.includes(tag.id) ? '✓ ' : ''}{tag.name}
-                </button>
-              ))}
-            </div>
-            {formData.tags.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-slate-200">
-                <p className="text-xs text-slate-600 mb-2">已选择：</p>
-                <p className="text-sm font-bold text-slate-900">{getTagNames(formData.tags)}</p>
-              </div>
-            )}
-          </div>
-
-          {/* 认证标识选择 */}
-          <div className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="text-lg font-bold mb-4">选择认证标识</h2>
-            <div className="space-y-2">
-              {badges.map(badge => (
-                <button
-                  key={badge.id}
-                  onClick={() => handleBadgeToggle(badge.id)}
-                  className={`w-full px-4 py-2 rounded-lg text-sm font-bold transition text-left ${
-                    formData.badges.includes(badge.id)
-                      ? 'bg-green-600 text-white'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  {formData.badges.includes(badge.id) ? '✓ ' : ''}{badge.name}
-                </button>
-              ))}
-            </div>
-            {formData.badges.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-slate-200">
-                <p className="text-xs text-slate-600 mb-2">已选择：</p>
-                <p className="text-sm font-bold text-slate-900">{getBadgeNames(formData.badges)}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* 地图选择弹窗 */}
       {showMapModal && (

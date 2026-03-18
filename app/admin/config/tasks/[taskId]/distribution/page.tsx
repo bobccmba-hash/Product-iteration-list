@@ -5,19 +5,21 @@ import { useParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { Button, Input, Tag, ToastHost, useToasts } from '@/components/admin/AdminPrimitives'
 
-type DistributionMode = 'new_default' | 'existing_default'
+type DistributionMode = 'all' | 'new_default' | 'existing_default'
 
 export default function TaskDistributionPage() {
   const params = useParams<{ taskId: string }>()
   const taskId = params.taskId
   const { toasts, push, remove } = useToasts()
 
-  const [mode, setMode] = useState<DistributionMode>('new_default')
+  const [mode, setMode] = useState<DistributionMode>('all')
   const [priority, setPriority] = useState(100)
   const [allowSameType, setAllowSameType] = useState(false)
 
   const modeLabel = useMemo(() => {
     switch (mode) {
+      case 'all':
+        return '所有学生'
       case 'new_default':
         return '新学生默认分配'
       case 'existing_default':
@@ -67,6 +69,7 @@ export default function TaskDistributionPage() {
           </div>
 
           <div className="mt-4 grid gap-2 md:grid-cols-2">
+            <RadioRow checked={mode === 'all'} onChange={() => setMode('all')} title="所有学生" desc="对所有学生默认分配该任务，包括新学生和老学生。" />
             <RadioRow checked={mode === 'new_default'} onChange={() => setMode('new_default')} title="新学生默认分配" desc="首次建立档案后默认拿到该任务。" />
             <RadioRow checked={mode === 'existing_default'} onChange={() => setMode('existing_default')} title="老学生默认分配" desc="已有档案但无任务时默认分配。" />
           </div>

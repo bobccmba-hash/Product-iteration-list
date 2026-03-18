@@ -19,7 +19,6 @@ type RewardState = {
   rewardType: 'card' | 'blind_box'
   rewardValue: string
   rewardCopy: string
-  immediate: boolean
 }
 
 const compareOps: Array<{ value: CompareOp; label: string }> = [
@@ -36,26 +35,14 @@ const periods: Array<{ value: StatPeriod; label: string }> = [
   { value: 'streak_days', label: '连续天' },
 ]
 
-const conditionTypes: Array<{ value: string; label: string; desc: string }> = [
+const conditionTypes: Array<{ value: string; label: string }> = [
   {
     value: '基础计数条件',
     label: '基础计数条件',
-    desc: '按「累计/当天/本周」的次数或张数计算，例如：今天完成 1 次互动、本周完成 3 次互动。',
   },
   {
     value: '连续条件',
     label: '连续条件',
-    desc: '要求连续多天达成，打断则重新累计，例如：连续互动 3 天、连续得卡 5 天。',
-  },
-  {
-    value: '去重收集条件',
-    label: '去重收集条件',
-    desc: '看「不同内容」的收集数量，例如：收集到 5 张不同知识卡。',
-  },
-  {
-    value: '里程碑条件',
-    label: '里程碑条件',
-    desc: '在某个重要节点触发一次性的奖励，例如：累计互动达到第 10 次、第 30 次时各发一次奖励。',
   },
 ]
 
@@ -66,8 +53,6 @@ const metrics: Array<{ value: string; label: string }> = [
   { value: '连续互动天数', label: '连续互动天数' },
   { value: '连续得卡天数', label: '连续得卡天数' },
   { value: '任务完成数', label: '任务完成数' },
-  { value: '目标完成数', label: '目标完成数' },
-  { value: '勋章获得数', label: '勋章获得数' },
 ]
 
 export default function TaskRulesRewardsPage() {
@@ -88,7 +73,6 @@ export default function TaskRulesRewardsPage() {
     rewardType: 'card',
     rewardValue: '1',
     rewardCopy: '奖励你 1 张卡牌！',
-    immediate: true,
   })
 
   function saveDraft() {
@@ -98,11 +82,6 @@ export default function TaskRulesRewardsPage() {
   function next() {
     push('已保存：下一步配置分发策略', 'success')
     window.location.href = `/admin/config/tasks/${taskId}/distribution`
-  }
-
-  function saveAndPush() {
-    push('已保存并触发推送到终端（示例，仅前端原型）', 'success')
-    window.location.href = '/admin/config/tasks'
   }
 
   return (
@@ -138,14 +117,6 @@ export default function TaskRulesRewardsPage() {
                 onChange={(v) => setCond((s) => ({ ...s, conditionType: v }))}
                 options={conditionTypes.map((x) => ({ value: x.value, label: x.label }))}
               />
-              <div className="mt-2 space-y-1 text-xs text-slate-500">
-                {conditionTypes.map((t) => (
-                  <div key={t.value}>
-                    <span className="font-semibold">{t.label}：</span>
-                    {t.desc}
-                  </div>
-                ))}
-              </div>
             </Field>
             <Field label="统计指标">
               <Select
@@ -201,12 +172,6 @@ export default function TaskRulesRewardsPage() {
             <Field label="奖励展示文案">
               <Input value={reward.rewardCopy} onChange={(v) => setReward((s) => ({ ...s, rewardCopy: v }))} />
             </Field>
-            <Field label="是否立即发放">
-              <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-                <input type="checkbox" checked={reward.immediate} onChange={(e) => setReward((s) => ({ ...s, immediate: e.target.checked }))} className="h-4 w-4" />
-                <span className="text-sm font-semibold text-slate-800">{reward.immediate ? '立即发放' : '延迟发放'}</span>
-              </label>
-            </Field>
           </div>
         </div>
 
@@ -222,8 +187,6 @@ export default function TaskRulesRewardsPage() {
                 <li>连续互动天数：最近一次起连续有互动记录的自然日天数。</li>
                 <li>连续得卡天数：最近一次起连续有「获得卡牌」事件的自然日天数。</li>
                 <li>任务完成数：成长记录中的任务完成事件次数。</li>
-                <li>目标完成数：成长记录中的目标完成事件次数。</li>
-                <li>勋章获得数：成长记录中的勋章解锁事件次数。</li>
               </ul>
             </div>
             <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
@@ -266,7 +229,6 @@ export default function TaskRulesRewardsPage() {
             保存草稿
           </Button>
           <Button onClick={next}>下一步：分发策略</Button>
-          <Button onClick={saveAndPush}>保存并推送到终端</Button>
         </div>
       </div>
     </div>

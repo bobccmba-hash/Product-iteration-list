@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react'
 import { Button, Tag } from '@/components/admin/AdminPrimitives'
 import { mockStudents } from '@/utils/adminMock'
 
-type TabKey = 'events' | 'tasks' | 'sync'
+type TabKey = 'events' | 'tasks'
 
 export default function GrowthDetailPage() {
   const params = useParams<{ studentId: string }>()
@@ -85,11 +85,10 @@ export default function GrowthDetailPage() {
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-3">
         <Stat title="累计互动次数" value={student?.totalInteractions ?? 0} />
         <Stat title="累计卡牌数" value={student?.totalCards ?? 0} />
         <Stat title="已完成任务数" value={3} />
-        <Stat title="最近 7 天互动数" value={5} />
       </div>
 
       <div className="rounded-2xl bg-white ring-1 ring-slate-200">
@@ -101,16 +100,12 @@ export default function GrowthDetailPage() {
             <TabButton active={tab === 'tasks'} onClick={() => setTab('tasks')}>
               任务记录
             </TabButton>
-            <TabButton active={tab === 'sync'} onClick={() => setTab('sync')}>
-              同步日志
-            </TabButton>
           </div>
         </div>
 
         <div className="p-4">
           {tab === 'events' && <EventsTable />}
           {tab === 'tasks' && <SimpleTable title="任务记录" columns={['任务名称', '当前进度', '状态', '完成时间']} rows={[['今天完成 1 次互动', '3/5', '进行中', '—'], ['连续互动 3 天', '已完成', '完成', '2026-03-06 18:20']]} />}
-          {tab === 'sync' && <SimpleTable title="同步日志" columns={['同步时间', '内容类型', '状态', '错误信息']} rows={[['2026-03-08 18:00', '成长事件', '成功', '—'], ['2026-03-08 18:01', '任务状态', '重试中', '网络不可达']]} />}
         </div>
       </div>
     </div>
@@ -140,9 +135,9 @@ function TabButton({ active, onClick, children }: { active: boolean; onClick: ()
 
 function EventsTable() {
   const rows = [
-    { at: '2026-03-08 17:52', type: '互动结束', interactionId: 'I_7788', cardId: 'C_12', delta: '+1', sync: '已同步' },
-    { at: '2026-03-08 17:40', type: '获得卡牌', interactionId: 'I_7788', cardId: 'C_12', delta: '+1', sync: '已同步' },
-    { at: '2026-03-08 08:21', type: '互动结束', interactionId: 'I_6621', cardId: 'C_05', delta: '+1', sync: '待同步' },
+    { at: '2026-03-08 17:52', type: '互动结束', interactionId: 'I_7788', cardId: 'C_12' },
+    { at: '2026-03-08 17:40', type: '获得卡牌', interactionId: 'I_7788', cardId: 'C_12' },
+    { at: '2026-03-08 08:21', type: '互动结束', interactionId: 'I_6621', cardId: 'C_05' },
   ]
 
   const [videoModal, setVideoModal] = useState<{ interactionId: string } | null>(null)
@@ -158,8 +153,6 @@ function EventsTable() {
               <th className="px-4 py-3">事件类型</th>
               <th className="px-4 py-3">互动ID</th>
               <th className="px-4 py-3">卡牌ID</th>
-              <th className="px-4 py-3">变化值</th>
-              <th className="px-4 py-3">同步状态</th>
               <th className="px-4 py-3">操作</th>
             </tr>
           </thead>
@@ -170,10 +163,6 @@ function EventsTable() {
                 <td className="px-4 py-3 text-slate-700">{r.type}</td>
                 <td className="px-4 py-3 font-mono text-xs">{r.interactionId}</td>
                 <td className="px-4 py-3 font-mono text-xs">{r.cardId}</td>
-                <td className="px-4 py-3 font-bold text-slate-900">{r.delta}</td>
-                <td className="px-4 py-3">
-                  <Tag tone={r.sync === '已同步' ? 'success' : 'warning'}>{r.sync}</Tag>
-                </td>
                 <td className="px-4 py-3">
                   <button
                     type="button"

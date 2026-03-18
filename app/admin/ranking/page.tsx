@@ -1,14 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Button, Tag } from '@/components/admin/AdminPrimitives'
-import { mockRankingConfigs, type RankingConfig, type RankingStatus } from '@/utils/rankingMock'
+import { type RankingConfig, type RankingStatus } from '@/utils/rankingMock'
+import { rankingStore } from '@/utils/rankingStore'
 
 export default function RankingListPage() {
-  const [configs, setConfigs] = useState(mockRankingConfigs)
+  const [configs, setConfigs] = useState<RankingConfig[]>(() => rankingStore.getConfigs())
   const [statusFilter, setStatusFilter] = useState<RankingStatus | ''>('')
   const [enabledFilter, setEnabledFilter] = useState<'all' | 'enabled' | 'disabled'>('all')
+
+  useEffect(() => {
+    return rankingStore.subscribe(() => {
+      setConfigs([...rankingStore.getConfigs()])
+    })
+  }, [])
 
   const filteredConfigs = useMemo(() => {
     return configs.filter((c) => {
@@ -20,9 +27,7 @@ export default function RankingListPage() {
   }, [configs, statusFilter, enabledFilter])
 
   const handleToggleEnabled = (id: string) => {
-    setConfigs((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, displayEnabled: !c.displayEnabled } : c))
-    )
+    rankingStore.toggleEnabled(id)
   }
 
   const handleReset = () => {
@@ -43,7 +48,7 @@ export default function RankingListPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/">
+          <Link href="/v1.9.0">
             <Button tone="secondary">返回首页</Button>
           </Link>
           <Link href="/admin/ranking/create">

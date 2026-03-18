@@ -11,7 +11,7 @@ function mockSectionById(id: string) {
       id,
       iconImage: '',
       mainTitle: '小黄鹿学园',
-      subtitle: '春风拂过，安全相伴',
+      syncCity: '西安区',
       layout: '单列多排',
       status: 'draft' as const,
       createdAt: '2026-03-08 09:10',
@@ -27,7 +27,7 @@ function mockSectionById(id: string) {
     id,
     iconImage: '',
     mainTitle: '晋江文旅品牌馆',
-    subtitle: '爱晋江·拼未来',
+    syncCity: '晋江区',
     layout: '两列一排',
     status: 'published' as const,
     createdAt: '2026-03-10 11:20',
@@ -85,8 +85,11 @@ export default function HomeBrandDetailPage({ params }: { params: Promise<{ id: 
           <div className="h-14 w-14 rounded-xl bg-slate-100 ring-1 ring-slate-200" />
           <div className="min-w-0 flex-1">
             <div className="text-lg font-black text-slate-900">{section.mainTitle}</div>
-            {section.subtitle ? <div className="mt-1 text-sm text-slate-600">{section.subtitle}</div> : null}
-            <div className="mt-3 grid gap-2 text-sm text-slate-700 sm:grid-cols-3">
+            <div className="mt-2 grid gap-2 text-sm text-slate-700 sm:grid-cols-4">
+              <div>
+                <div className="text-xs font-bold text-slate-500">同步城市</div>
+                <div className="font-semibold">{section.syncCity ?? '—'}</div>
+              </div>
               <div>
                 <div className="text-xs font-bold text-slate-500">创建时间</div>
                 <div className="font-semibold">{section.createdAt}</div>

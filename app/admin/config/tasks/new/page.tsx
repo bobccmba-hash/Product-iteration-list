@@ -10,10 +10,6 @@ type FormState = {
   desc: string
   type: TaskType
   cycle: TaskCycle
-  isMain: boolean
-  repeatable: boolean
-  startAt: string
-  endAt: string
   offline: boolean
   frontendTitle: string
   frontendShortDesc: string
@@ -32,10 +28,6 @@ export default function TaskCreatePage() {
     desc: '',
     type: 'count',
     cycle: 'daily',
-    isMain: true,
-    repeatable: true,
-    startAt: '',
-    endAt: '',
     offline: true,
     frontendTitle: '我的小任务',
     frontendShortDesc: '再来一次就能完成啦！',
@@ -144,42 +136,12 @@ export default function TaskCreatePage() {
               </div>
             </Field>
 
-            <Field label="主任务标记">
-              <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-                <input type="checkbox" checked={form.isMain} onChange={(e) => update('isMain', e.target.checked)} className="h-4 w-4" />
-                <span className="text-sm font-semibold text-slate-800">作为当前主任务展示</span>
-              </label>
-              <p className="mt-1 text-xs text-slate-500">
-                勾选后，该任务会作为学生当前的「主任务」出现在终端首页；首期建议仅为少量核心任务打上主任务标记。
-              </p>
-            </Field>
-            <Field label="是否可重复完成">
-              <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-                <input type="checkbox" checked={form.repeatable} onChange={(e) => update('repeatable', e.target.checked)} className="h-4 w-4" />
-                <span className="text-sm font-semibold text-slate-800">完成后可再次分配</span>
-              </label>
-            </Field>
+
           </div>
 
           <div className="mt-8">
-            <SectionTitle title="生效与离线" desc="定义任务的生效时间窗口与是否支持离线推进。" />
+            <SectionTitle title="离线支持" desc="定义任务是否支持离线推进。" />
             <div className="mt-4 grid gap-3 md:grid-cols-3">
-              <Field label="生效时间（开始）">
-                <input
-                  type="datetime-local"
-                  value={form.startAt}
-                  onChange={(e) => update('startAt', e.target.value)}
-                  className="h-10 w-full rounded-lg bg-white px-3 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
-                />
-              </Field>
-              <Field label="生效时间（结束）">
-                <input
-                  type="datetime-local"
-                  value={form.endAt}
-                  onChange={(e) => update('endAt', e.target.value)}
-                  className="h-10 w-full rounded-lg bg-white px-3 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
-                />
-              </Field>
               <Field label="离线支持" className="md:col-span-3">
                 <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
                   <input type="checkbox" checked={form.offline} onChange={(e) => update('offline', e.target.checked)} className="h-4 w-4" />

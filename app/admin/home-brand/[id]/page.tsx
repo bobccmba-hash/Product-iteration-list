@@ -12,7 +12,7 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
     name: '晋江文旅品牌馆',
     icon: '🏛️',
     iconType: 'emoji',
-    subtitle: '爱晋江·拼未来',
+    syncCity: '',
     layout: 'two-columns-one-row',
     cards: [
       { id: 'c1', title: '晋江清新旅游', image: '', jumpType: 'page', jumpTarget: '' },
@@ -126,6 +126,23 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
 
       <div className="space-y-6">
         <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
+          <h2 className="mb-4 text-lg font-black">同步城市</h2>
+          <div>
+            <label className="block text-sm font-bold">同步城市 <span className="text-red-600">*</span></label>
+            <select
+              value={section.syncCity}
+              onChange={(e) => setSection({ ...section, syncCity: e.target.value })}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            >
+              <option value="">请选择同步城市</option>
+              <option value="jinjiang">晋江区</option>
+              <option value="xian">西安区</option>
+              <option value="other">其他区</option>
+            </select>
+          </div>
+        </section>
+
+        <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
           <h2 className="mb-4 text-lg font-black">区域头部设置</h2>
           <div className="space-y-4">
             <div>
@@ -159,16 +176,6 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-bold">副标题</label>
-              <input
-                type="text"
-                value={section.subtitle}
-                onChange={(e) => setSection({ ...section, subtitle: e.target.value })}
-                placeholder="输入副标题（可选）"
-                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            </div>
           </div>
         </section>
 

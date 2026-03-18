@@ -6,7 +6,7 @@ export default function CommentRulesImplementation() {
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <Link href="/prd" className="mb-6 inline-flex items-center gap-1.5 text-base font-bold text-slate-500 hover:text-slate-900">
+        <Link href="/v1.9.0" className="mb-6 inline-flex items-center gap-1.5 text-base font-bold text-slate-500 hover:text-slate-900">
           ← 返回 PRD 目录
         </Link>
 

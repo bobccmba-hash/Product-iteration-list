@@ -281,53 +281,6 @@ export default function OrgTagListPage() {
           </div>
         </div>
       )}
-
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
-            <h3 className="text-lg font-bold">{editingId ? '编辑标签' : '新增标签'}</h3>
-            <div className="mt-4 space-y-4">
-              <div>
-                <label className="block text-sm font-bold mb-1">标签名称</label>
-                <input
-                  type="text"
-                  value={newTag.name}
-                  onChange={(e) => setNewTag({ ...newTag, name: e.target.value })}
-                  placeholder="例如：人气机构"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold mb-1">排序</label>
-                <input
-                  type="number"
-                  value={newTag.sort}
-                  onChange={(e) => setNewTag({ ...newTag, sort: parseInt(e.target.value) })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-              </div>
-            </div>
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => {
-                  setShowAddModal(false)
-                  setEditingId(null)
-                  setNewTag({ name: '', sort: 10 })
-                }}
-                className="flex-1 rounded-lg bg-slate-200 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-300"
-              >
-                取消
-              </button>
-              <button
-                onClick={handleAddTag}
-                className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-bold text-white hover:bg-indigo-700"
-              >
-                {editingId ? '保存' : '确认'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

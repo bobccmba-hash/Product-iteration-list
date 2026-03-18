@@ -2,71 +2,70 @@
 
 import Link from 'next/link'
 import { useId, useMemo, useState } from 'react'
-import { Button, Input, Tag, ToastHost, useToasts } from '@/components/admin/AdminPrimitives'
-import type { TaskCycle, TaskType } from '@/utils/adminMock'
+import { Button, Input, ToastHost, useToasts } from '@/components/admin/AdminPrimitives'
+
+const METRICS = [
+  { value: '互动次数', label: '互动次数', hint: '选定周期内的互动结束事件数量' },
+  { value: '卡牌总数', label: '卡牌总数', hint: '选定周期内获得的卡牌张数（含重复）' },
+  { value: '不同卡牌数', label: '不同卡牌数', hint: '选定周期内去重后的卡牌种类数量' },
+  { value: '连续互动天数', label: '连续互动天数', hint: '从最近一次起，连续有互动记录的自然日天数' },
+  { value: '连续得卡天数', label: '连续得卡天数', hint: '从最近一次起，连续有获得卡牌事件的自然日天数' },
+  { value: '任务完成数', label: '任务完成数', hint: '成长记录中的任务完成事件次数' },
+]
+
+const CYCLES = [
+  { value: 'daily', label: '日', desc: '每天重置，可反复完成' },
+  { value: 'weekly', label: '周', desc: '每周重置，可反复完成' },
+  { value: 'one_time', label: '一次性', desc: '累计达标后终身完成，不重置' },
+] as const
+
+type Cycle = typeof CYCLES[number]['value']
 
 type FormState = {
   name: string
   desc: string
-  type: TaskType
-  cycle: TaskCycle
-  offline: boolean
-  frontendTitle: string
-  frontendShortDesc: string
-  doneHint: string
-  nearlyHint: string
+  cycle: Cycle
+  metric: string
+  targetValue: number
+  rewardType: 'card' | 'blind_box'
+  rewardValue: number
+  distribution: 'all' | 'new_default' | 'existing_default'
 }
 
 export default function TaskCreatePage() {
   const { toasts, push, remove } = useToasts()
-  const [dirty, setDirty] = useState(false)
   const uid = useId()
   const tmpTaskId = useMemo(() => `tmp_${uid.replace(/:/g, '')}`, [uid])
 
-  const [form, setForm] = useState<FormState>(() => ({
+  const [form, setForm] = useState<FormState>({
     name: '',
     desc: '',
-    type: 'count',
     cycle: 'daily',
-    offline: true,
-    frontendTitle: '我的小任务',
-    frontendShortDesc: '再来一次就能完成啦！',
-    doneHint: '完成啦！太厉害了！',
-    nearlyHint: '快完成了，再加把劲！',
-  }))
-
-  const typeCopy = useMemo(
-    () => (form.type === 'count' ? '次数型' : form.type === 'collection' ? '收集型' : '其他'),
-    [form.type]
-  )
-  const cycleCopy = useMemo(
-    () => (form.cycle === 'daily' ? '日任务' : form.cycle === 'weekly' ? '周任务' : '一次性'),
-    [form.cycle]
-  )
+    metric: '互动次数',
+    targetValue: 3,
+    rewardType: 'card',
+    rewardValue: 1,
+    distribution: 'all',
+  })
 
   function update<K extends keyof FormState>(k: K, v: FormState[K]) {
-    setDirty(true)
     setForm((s) => ({ ...s, [k]: v }))
   }
 
   function validate() {
     if (!form.name.trim()) return '请填写任务名称'
+    if (form.targetValue < 1) return '目标数值需大于 0'
     return null
   }
 
   function onSaveDraft() {
     const msg = validate()
     if (msg) return push(msg, 'danger')
-    push('已保存草稿（示例，不落库）', 'success')
-    setDirty(false)
+    push('已保存草稿', 'success')
   }
 
-  function onNext() {
-    const msg = validate()
-    if (msg) return push(`基础字段未填完整：${msg}`, 'danger')
-    push('已通过校验：下一步配置条件与奖励', 'success')
-    window.location.href = `/admin/config/tasks/${encodeURIComponent(tmpTaskId)}/rules-rewards`
-  }
+  const selectedMetric = METRICS.find((m) => m.value === form.metric)
+  const selectedCycle = CYCLES.find((c) => c.value === form.cycle)
 
   return (
     <div className="space-y-5">
@@ -82,159 +81,175 @@ export default function TaskCreatePage() {
         </Link>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[7fr_3fr]">
-        <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
-          <SectionTitle title="任务基础信息" desc="定义任务名称、类型、周期与可重复等属性。" />
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <Field label="任务名称">
-              <Input value={form.name} onChange={(v) => update('name', v)} placeholder="例如：今天完成 1 次互动" />
+      <div className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
+        <div className="space-y-6">
+
+          {/* 基本信息 */}
+          <div className="space-y-3">
+            <SectionLabel title="基本信息" />
+            <Field label="任务名称 *">
+              <Input value={form.name} onChange={(v) => update('name', v)} placeholder="例如：今天完成 3 次互动" />
             </Field>
-            <Field label="任务说明" className="md:col-span-2">
+            <Field label="任务说明">
               <textarea
                 value={form.desc}
                 onChange={(e) => update('desc', e.target.value)}
-                className="min-h-24 w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
+                placeholder="可选，补充说明任务背景或提示（选填）"
+                className="min-h-20 w-full rounded-lg bg-white px-3 py-2 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
               />
             </Field>
-
-            <Field label="任务类型" className="md:col-span-2">
-              <div className="grid gap-2 md:grid-cols-4">
-                {([
-                  { v: 'count', l: '次数型' },
-                  { v: 'collection', l: '收集型' },
-                ] as const).map((x) => (
-                  <label key={x.v} className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 ring-1 ring-slate-200">
-                    <input type="radio" checked={form.type === x.v} onChange={() => update('type', x.v)} className="h-4 w-4" />
-                    <span className="text-sm font-semibold text-slate-800">{x.l}</span>
-                  </label>
-                ))}
-              </div>
-              <div className="mt-2 space-y-1 text-xs text-slate-500">
-                <div>
-                  <span className="font-semibold">次数型：</span>
-                  按“完成 N 次互动/游戏”计数，适合每日、小周期打卡任务。
-                </div>
-                <div>
-                  <span className="font-semibold">收集型：</span>
-                  按“收集到 N 张卡牌/内容”计数，适合需要累积解锁的任务。
-                </div>
-              </div>
-            </Field>
-
-            <Field label="任务周期" className="md:col-span-2">
-              <div className="grid gap-2 md:grid-cols-4">
-                {([
-                  { v: 'daily', l: '日' },
-                  { v: 'weekly', l: '周' },
-                  { v: 'one_time', l: '一次性' },
-                ] as const).map((x) => (
-                  <label key={x.v} className="flex cursor-pointer items-center gap-2 rounded-xl bg-slate-50 px-3 py-2 ring-1 ring-slate-200">
-                    <input type="radio" checked={form.cycle === x.v} onChange={() => update('cycle', x.v)} className="h-4 w-4" />
-                    <span className="text-sm font-semibold text-slate-800">{x.l}</span>
-                  </label>
-                ))}
-              </div>
-            </Field>
-
-
           </div>
 
-          <div className="mt-8">
-            <SectionTitle title="离线支持" desc="定义任务是否支持离线推进。" />
-            <div className="mt-4 grid gap-3 md:grid-cols-3">
-              <Field label="离线支持" className="md:col-span-3">
-                <label className="flex items-center gap-3 rounded-xl bg-slate-50 px-3 py-3 ring-1 ring-slate-200">
-                  <input type="checkbox" checked={form.offline} onChange={(e) => update('offline', e.target.checked)} className="h-4 w-4" />
-                  <span className="text-sm font-semibold text-slate-800">无网时仍可分配/推进/完成</span>
-                  <div className="ml-auto">
-                    <Tag tone={form.offline ? 'info' : 'neutral'}>{form.offline ? '支持离线' : '不支持离线'}</Tag>
+          <div className="border-t border-slate-100" />
+
+          {/* 任务周期 */}
+          <div className="space-y-3">
+            <SectionLabel title="任务周期" desc="决定统计窗口的重置频率" />
+            <div className="grid gap-3 sm:grid-cols-3">
+              {CYCLES.map((c) => (
+                <label key={c.value} className={`flex cursor-pointer flex-col gap-1 rounded-xl p-4 ring-1 transition ${
+                  form.cycle === c.value ? 'bg-slate-900 ring-slate-900' : 'bg-slate-50 ring-slate-200 hover:ring-slate-300'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <input type="radio" checked={form.cycle === c.value} onChange={() => update('cycle', c.value)} className="h-4 w-4" />
+                    <span className={`text-sm font-black ${ form.cycle === c.value ? 'text-white' : 'text-slate-800'}`}>{c.label}</span>
                   </div>
+                  <div className={`text-xs ${ form.cycle === c.value ? 'text-white/70' : 'text-slate-500'}`}>{c.desc}</div>
                 </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100" />
+
+          {/* 完成条件 */}
+          <div className="space-y-3">
+            <SectionLabel title="完成条件" desc="当统计值达到目标数值时，任务判定为完成" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="统计指标">
+                <select
+                  value={form.metric}
+                  onChange={(e) => update('metric', e.target.value)}
+                  className="h-10 w-full rounded-lg bg-white px-3 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
+                >
+                  {METRICS.map((m) => (
+                    <option key={m.value} value={m.value}>{m.label}</option>
+                  ))}
+                </select>
+                {selectedMetric && (
+                  <p className="mt-1 text-xs text-slate-500">{selectedMetric.hint}</p>
+                )}
+              </Field>
+              <Field label="目标数值">
+                <input
+                  type="number"
+                  value={form.targetValue}
+                  min={1}
+                  onChange={(e) => update('targetValue', Math.max(1, Number(e.target.value || 1)))}
+                  className="h-10 w-full rounded-lg bg-white px-3 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  达成公式：{form.metric} {'>='} {form.targetValue}（{selectedCycle?.label}）
+                </p>
               </Field>
             </div>
           </div>
 
-          <div className="mt-8">
-            <SectionTitle title="前台展示设置" desc="影响「互动任务目标功能」与「结束反馈」的文案与高光提示。" />
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <Field label="前台任务标题">
-                <Input value={form.frontendTitle} onChange={(v) => update('frontendTitle', v)} />
-              </Field>
-              <Field label="前台简短说明">
-                <Input value={form.frontendShortDesc} onChange={(v) => update('frontendShortDesc', v)} />
-              </Field>
-              <Field label="完成提示文案">
-                <Input value={form.doneHint} onChange={(v) => update('doneHint', v)} />
-              </Field>
-              <Field label="即将完成提示文案">
-                <Input value={form.nearlyHint} onChange={(v) => update('nearlyHint', v)} />
-              </Field>
-            </div>
-          </div>
-        </div>
+          <div className="border-t border-slate-100" />
 
-        <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
-          <div className="text-xs font-bold text-slate-500">终端预览</div>
-          <div className="mt-4 rounded-2xl bg-slate-900 p-5 text-white">
-            <div className="text-xs font-bold text-white/70">当前任务展示卡</div>
-            <div className="mt-2 text-lg font-black">{form.name || '（任务名称）'}</div>
-            <div className="mt-1 text-xs text-white/70">
-              {typeCopy} · {cycleCopy}
-            </div>
-            <div className="mt-3 rounded-xl bg-white/10 p-3 text-xs text-white/80">
-              <div className="font-bold text-white/90">{form.frontendTitle}</div>
-              <div className="mt-1">{form.frontendShortDesc}</div>
+          {/* 奖励 */}
+          <div className="space-y-3">
+            <SectionLabel title="奖励" desc="任务完成后发放的奖励" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="奖励类型">
+                <div className="grid grid-cols-2 gap-2">
+                  {([
+                    { v: 'card', l: '卡牌' },
+                    { v: 'blind_box', l: '盲盒' },
+                  ] as const).map((r) => (
+                    <label key={r.v} className={`flex cursor-pointer items-center gap-2 rounded-xl p-3 ring-1 transition ${
+                      form.rewardType === r.v ? 'bg-slate-900 ring-slate-900' : 'bg-slate-50 ring-slate-200 hover:ring-slate-300'
+                    }`}>
+                      <input type="radio" checked={form.rewardType === r.v} onChange={() => update('rewardType', r.v)} className="h-4 w-4" />
+                      <span className={`text-sm font-bold ${ form.rewardType === r.v ? 'text-white' : 'text-slate-800'}`}>{r.l}</span>
+                    </label>
+                  ))}
+                </div>
+              </Field>
+              <Field label="奖励数量">
+                <input
+                  type="number"
+                  value={form.rewardValue}
+                  min={1}
+                  onChange={(e) => update('rewardValue', Math.max(1, Number(e.target.value || 1)))}
+                  className="h-10 w-full rounded-lg bg-white px-3 text-sm ring-1 ring-slate-200 focus:ring-2 focus:ring-slate-400"
+                />
+              </Field>
             </div>
           </div>
-          <div className="mt-4 rounded-xl bg-slate-50 p-4 text-xs text-slate-600 ring-1 ring-slate-200">
-            <div className="font-bold text-slate-900">提示</div>
-            <div className="mt-1">下一步会配置“条件与奖励”，再决定任务推进与完成时的反馈形态。</div>
+
+          <div className="border-t border-slate-100" />
+
+          {/* 分发策略 */}
+          <div className="space-y-3">
+            <SectionLabel title="分发策略" desc="配置学生什么时候拿到这个任务" />
+            <div className="grid gap-3 sm:grid-cols-3">
+              {([
+                { v: 'all', l: '所有学生', d: '对所有学生默认分配，包括新学生和老学生' },
+                { v: 'new_default', l: '新学生默认分配', d: '首次建立档案后默认拿到该任务' },
+                { v: 'existing_default', l: '老学生默认分配', d: '已有档案但无任务时默认分配' },
+              ] as const).map((r) => (
+                <label key={r.v} className={`flex cursor-pointer flex-col gap-1 rounded-xl p-4 ring-1 transition ${
+                  form.distribution === r.v ? 'bg-slate-900 ring-slate-900' : 'bg-slate-50 ring-slate-200 hover:ring-slate-300'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <input type="radio" checked={form.distribution === r.v} onChange={() => update('distribution', r.v)} className="h-4 w-4" />
+                    <span className={`text-sm font-black ${form.distribution === r.v ? 'text-white' : 'text-slate-800'}`}>{r.l}</span>
+                  </div>
+                  <div className={`text-xs ${form.distribution === r.v ? 'text-white/70' : 'text-slate-500'}`}>{r.d}</div>
+                </label>
+              ))}
+            </div>
           </div>
+
         </div>
       </div>
 
       <div className="sticky bottom-4 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
         <div className="flex flex-wrap items-center gap-2">
-          <Button tone="secondary" onClick={onSaveDraft}>
-            保存草稿
-          </Button>
-          <Button onClick={onNext}>下一步：配置条件与奖励</Button>
-          <div className="ml-auto">
-            <button
-              type="button"
-              onClick={() => {
-                if (dirty) {
-                  const ok = window.confirm('当前内容尚未保存，是否离开？')
-                  if (!ok) return
-                }
-                window.location.href = '/admin/config/tasks'
-              }}
-              className="text-sm font-semibold text-slate-600 hover:text-slate-900"
-            >
-              返回
-            </button>
-          </div>
+          <Button onClick={() => {
+            const msg = validate()
+            if (msg) return push(msg, 'danger')
+            push('已保存配置', 'success')
+            window.location.href = '/admin/config/tasks'
+          }}>保存配置</Button>
+          <button
+            type="button"
+            onClick={() => window.location.href = '/admin/config/tasks'}
+            className="ml-auto text-sm font-semibold text-slate-600 hover:text-slate-900"
+          >
+            返回
+          </button>
         </div>
       </div>
     </div>
   )
 }
 
-function SectionTitle({ title, desc }: { title: string; desc: string }) {
+function SectionLabel({ title, desc }: { title: string; desc?: string }) {
   return (
     <div>
       <div className="text-sm font-black text-slate-900">{title}</div>
-      <div className="mt-1 text-xs text-slate-500">{desc}</div>
+      {desc && <div className="mt-0.5 text-xs text-slate-500">{desc}</div>}
     </div>
   )
 }
 
-function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className={className}>
+    <div>
       <div className="mb-1 text-xs font-semibold text-slate-700">{label}</div>
       {children}
     </div>
   )
 }
-

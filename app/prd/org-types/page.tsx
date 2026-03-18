@@ -6,7 +6,7 @@ export default function PrdOrgTypesPage() {
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         <div className="mb-6 flex items-center justify-between gap-4">
           <Link href="/v1.9.0" className="inline-flex items-center gap-1.5 text-base font-bold text-slate-500 hover:text-slate-900">
-            ← 返回首页
+            ← 返回 1.9.0 需求首页
           </Link>
           <div className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 text-sm font-semibold text-slate-50">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
@@ -16,213 +16,293 @@ export default function PrdOrgTypesPage() {
 
         <header className="mb-8 space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-2.5 py-1 text-sm font-bold text-indigo-700 ring-1 ring-indigo-200">
-            <span className="text-sm">🏛️</span>
-            <span>机构类型 · 配置后台</span>
+            <span>🏛️</span><span>系统管理 · 机构类型</span>
           </div>
-          <h1 className="text-4xl font-black tracking-tight">机构类型管理 PRD</h1>
-          <p className="max-w-3xl text-lg leading-relaxed text-slate-600">
-            本文档定义机构类型的分类管理规范，包括类型的新增、编辑、删除、排序等功能，用于支撑机构的分类展示与筛选。
+          <h1 className="text-3xl font-black tracking-tight">机构类型管理 PRD</h1>
+          <p className="max-w-3xl text-base leading-relaxed text-slate-600">
+            本文档定义机构类型管理后台（v1.9.0）。运营人员通过本模块维护机构主分类字典，供机构创建时单选使用。类型拥有稳定唯一的编码（code）与可调整的展示名称，支持排序配置与关联机构数查看，已被机构引用的类型不允许删除。
           </p>
+          <div className="flex flex-wrap gap-2 text-sm text-slate-500">
+            <span className="rounded-full bg-white px-2 py-0.5 ring-1 ring-slate-200">版本：v1.9.0</span>
+            <span className="rounded-full bg-white px-2 py-0.5 ring-1 ring-slate-200">角色：运营 / 管理员</span>
+            <span className="rounded-full bg-white px-2 py-0.5 ring-1 ring-slate-200">路由：/admin/system/org-types</span>
+          </div>
         </header>
 
         <div className="space-y-6">
-          <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="mb-4 text-2xl font-black text-slate-900">一、业务目标 &amp; 使用场景</h2>
-            <div className="grid gap-6 text-base text-slate-700 sm:grid-cols-2">
-              <div className="space-y-2">
-                <h3 className="text-lg font-bold">业务目标</h3>
-                <ul className="list-inside list-disc space-y-1.5 text-sm">
-                  <li>建立机构分类体系</li>
-                  <li>支持灵活的类型配置</li>
-                  <li>实现机构的分类展示</li>
-                  <li>支持类型的排序管理</li>
-                </ul>
+
+          {/* 一、核心概念 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">一、核心概念</h2>
+              <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-sm font-semibold text-indigo-700">Concepts</span>
+            </div>
+            <div className="space-y-3">
+              <div className="rounded-xl bg-indigo-50 p-4 ring-1 ring-indigo-100">
+                <div className="mb-1 text-sm font-bold text-indigo-800">类型 = 唯一编码（code）+ 展示名称（name）+ 排序值（sort）</div>
+                <p className="text-sm leading-relaxed text-indigo-900">
+                  机构类型是机构的主分类字典。<strong>编码（code）</strong>由系统自动生成（格式 <code className="rounded bg-indigo-100 px-1 text-xs">type_&lt;timestamp&gt;</code>），稳定不变，作为机构表的外键引用；<strong>名称（name）</strong>是展示给用户的文字，可随时修改而不影响已有引用关系。排序值越小越靠前，默认步长为 10。
+                </p>
               </div>
-              <div className="space-y-2">
-                <h3 className="text-lg font-bold">使用场景</h3>
-                <ul className="list-inside list-disc space-y-1.5 text-sm">
-                  <li>管理员创建机构类型</li>
-                  <li>编辑和删除类型</li>
-                  <li>调整类型排序</li>
-                  <li>前台按类型筛选机构</li>
-                </ul>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: '编码稳定', desc: '新增时系统自动生成，不可手动修改。机构表通过 code 引用，改名不影响关联关系。' },
+                  { label: '名称可改', desc: '展示名称随时可编辑，修改后机构列表、筛选器等前台展示同步更新。' },
+                  { label: '关联保护', desc: '已被至少一个机构使用的类型，删除按钮置灰禁用，防止意外破坏关联关系。' },
+                ].map((c) => (
+                  <div key={c.label} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
+                    <div className="mb-1 font-bold text-slate-800">{c.label}</div>
+                    <p className="text-sm text-slate-600">{c.desc}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
 
-          <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="mb-4 text-2xl font-black text-slate-900">二、核心功能</h2>
-            <div className="space-y-3 text-sm text-slate-700">
-              <div className="rounded-lg bg-indigo-50 p-4">
-                <p className="text-lg font-bold">2.1 类型管理</p>
-                <p className="mt-2 text-sm">新增、编辑、删除机构类型，配置类型名称、描述、排序等信息</p>
-              </div>
-              <div className="rounded-lg bg-indigo-50 p-4">
-                <p className="text-lg font-bold">2.2 排序管理</p>
-                <p className="mt-2 text-sm">支持拖拽排序或输入排序值，灵活调整类型展示顺序</p>
-              </div>
-              <div className="rounded-lg bg-indigo-50 p-4">
-                <p className="text-lg font-bold">2.3 使用统计</p>
-                <p className="mt-2 text-sm">显示每个类型下的机构数量，支持查看使用该类型的机构清单</p>
-              </div>
-              <div className="rounded-lg bg-indigo-50 p-4">
-                <p className="text-lg font-bold">2.4 批量操作</p>
-                <p className="mt-2 text-sm">支持批量删除、批量排序等操作，提高管理效率</p>
-              </div>
+          {/* 二、类型列表页 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">二、类型列表页</h2>
+              <span className="rounded-full bg-slate-900 px-2 py-0.5 text-sm font-semibold text-slate-50">/admin/system/org-types</span>
             </div>
-          </section>
-
-          <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="mb-4 text-2xl font-black text-slate-900">三、后台界面规范</h2>
-            <div className="space-y-4 text-sm text-slate-700">
-              <div className="rounded-lg bg-slate-50 p-4">
-                <p className="text-lg font-bold">3.1 类型列表页</p>
-                <ul className="mt-2 list-inside list-disc space-y-1 text-sm">
-                  <li>显示所有机构类型，支持搜索、过滤、排序</li>
-                  <li>每条类型显示：名称、描述、排序、使用数量、操作</li>
-                  <li>支持新增、编辑、删除、排序类型</li>
-                  <li>支持批量操作（删除、排序）</li>
-                </ul>
+            <div className="space-y-4 text-sm">
+              <div className="rounded-xl bg-slate-50 px-4 py-3 text-slate-600 ring-1 ring-slate-100">
+                页面顶部面包屑「系统管理 / 系统机构管理」，右上角提供「返回后台首页」与「+ 新增类型」入口。筛选区支持按类型名称或编码关键词搜索，点击「查询」触发过滤，「重置」清空关键词恢复全量列表。
               </div>
-              <div className="rounded-lg bg-slate-50 p-4">
-                <p className="text-lg font-bold">3.2 类型编辑页</p>
-                <ul className="mt-2 list-inside list-disc space-y-1 text-sm">
-                  <li>类型名称、描述、排序等基本信息</li>
-                  <li>类型预览</li>
-                  <li>保存和取消按钮</li>
-                </ul>
-              </div>
-              <div className="rounded-lg bg-slate-50 p-4">
-                <p className="text-lg font-bold">3.3 使用机构清单</p>
-                <ul className="mt-2 list-inside list-disc space-y-1 text-sm">
-                  <li>点击使用数量显示该类型下的所有机构</li>
-                  <li>支持搜索、过滤机构</li>
-                  <li>显示机构名称、创建时间等信息</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="mb-4 text-2xl font-black text-slate-900">四、数据模型</h2>
-            <div className="space-y-3 text-sm text-slate-700">
-              <div className="rounded-lg bg-slate-50 p-4">
-                <p className="font-bold text-base">机构类型表</p>
-                <p className="mt-2 font-mono text-xs">id, name, description, sort, use_count, status, created_at, updated_at</p>
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-            <h2 className="mb-4 text-2xl font-black text-slate-900">五、测试用例设计</h2>
-            <div className="space-y-4 text-sm text-slate-700">
               <div>
-                <div className="mb-3 text-lg font-bold">5.1 常规功能测试用例</div>
-                <div className="overflow-x-auto rounded-xl border border-slate-100 bg-slate-50">
-                  <table className="min-w-full border-collapse text-left text-xs">
-                    <thead className="bg-slate-100 uppercase tracking-wide text-slate-500">
+                <div className="mb-2 font-bold text-slate-800">列表字段</div>
+                <div className="overflow-hidden rounded-xl border border-slate-100">
+                  <table className="min-w-full border-collapse text-left">
+                    <thead className="bg-slate-100 text-xs uppercase text-slate-500">
                       <tr>
-                        <th className="px-3 py-2 font-semibold">用例编号</th>
-                        <th className="px-3 py-2 font-semibold">类型</th>
-                        <th className="px-3 py-2 font-semibold">前置条件</th>
-                        <th className="px-3 py-2 font-semibold">步骤</th>
-                        <th className="px-3 py-2 font-semibold">期望结果</th>
+                        <th className="px-3 py-2">字段</th>
+                        <th className="px-3 py-2">展示说明</th>
+                        <th className="px-3 py-2">响应式可见性</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-t border-slate-100">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-001</td>
-                        <td className="px-3 py-2 align-top">功能 · 新增类型</td>
-                        <td className="px-3 py-2 align-top">具备类型管理权限</td>
-                        <td className="px-3 py-2 align-top">1)进入类型管理 2)点击新增 3)填写名称、描述 4)设置排序 5)保存</td>
-                        <td className="px-3 py-2 align-top">类型保存成功，列表显示新类型，前台可见</td>
-                      </tr>
-                      <tr className="border-t border-slate-100 bg-white/60">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-002</td>
-                        <td className="px-3 py-2 align-top">功能 · 编辑类型</td>
-                        <td className="px-3 py-2 align-top">已存在类型</td>
-                        <td className="px-3 py-2 align-top">1)点击编辑 2)修改内容 3)保存</td>
-                        <td className="px-3 py-2 align-top">类型更新成功，前台显示最新内容</td>
-                      </tr>
-                      <tr className="border-t border-slate-100">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-003</td>
-                        <td className="px-3 py-2 align-top">功能 · 删除类型</td>
-                        <td className="px-3 py-2 align-top">已存在未使用的类型</td>
-                        <td className="px-3 py-2 align-top">1)点击删除 2)确认</td>
-                        <td className="px-3 py-2 align-top">类型删除成功，列表不显示</td>
-                      </tr>
-                      <tr className="border-t border-slate-100 bg-white/60">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-004</td>
-                        <td className="px-3 py-2 align-top">功能 · 调整排序</td>
-                        <td className="px-3 py-2 align-top">已存在多个类型</td>
-                        <td className="px-3 py-2 align-top">1)拖拽调整顺序 2)保存</td>
-                        <td className="px-3 py-2 align-top">排序保存成功，前台显示新顺序</td>
-                      </tr>
-                      <tr className="border-t border-slate-100">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-005</td>
-                        <td className="px-3 py-2 align-top">功能 · 查看使用机构</td>
-                        <td className="px-3 py-2 align-top">已存在使用该类型的机构</td>
-                        <td className="px-3 py-2 align-top">1)点击使用数量 2)查看机构清单</td>
-                        <td className="px-3 py-2 align-top">显示该类型下的所有机构</td>
-                      </tr>
+                      {[
+                        ['排序', '数字输入框，当前排序值，宽度固定 64px，列表按此值升序排列', '始终显示'],
+                        ['类型名称', '粗体展示，即 name 字段', '始终显示'],
+                        ['关联机构数', '有机构时显示「N 个机构」蓝色可点击链接，无机构时显示灰色 0', 'md 及以上'],
+                        ['创建时间', '格式 YYYY-MM-DD HH:mm', 'lg 及以上'],
+                        ['更新时间', '最近修改时间，格式 YYYY-MM-DD HH:mm', 'lg 及以上'],
+                        ['操作', '编辑 / 删除（已关联时删除置灰禁用）', '始终显示'],
+                      ].map(([f, d, r], i) => (
+                        <tr key={f} className={`border-t border-slate-100 ${i % 2 === 1 ? 'bg-slate-50' : ''}`}>
+                          <td className="px-3 py-2 font-medium whitespace-nowrap">{f}</td>
+                          <td className="px-3 py-2 text-slate-600">{d}</td>
+                          <td className="px-3 py-2 text-xs text-slate-400 whitespace-nowrap">{r}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
               </div>
               <div>
-                <div className="mb-3 text-lg font-bold">5.2 非常规 / 暴力测试用例</div>
-                <div className="overflow-x-auto rounded-xl border border-slate-100 bg-slate-50">
-                  <table className="min-w-full border-collapse text-left text-xs">
-                    <thead className="bg-slate-100 uppercase tracking-wide text-slate-500">
-                      <tr>
-                        <th className="px-3 py-2 font-semibold">用例编号</th>
-                        <th className="px-3 py-2 font-semibold">类型</th>
-                        <th className="px-3 py-2 font-semibold">前置条件</th>
-                        <th className="px-3 py-2 font-semibold">步骤</th>
-                        <th className="px-3 py-2 font-semibold">期望结果</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-t border-slate-100">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-101</td>
-                        <td className="px-3 py-2 align-top">异常 · 名称长度边界</td>
-                        <td className="px-3 py-2 align-top">—</td>
-                        <td className="px-3 py-2 align-top">1)新增类型 2)名称输入0/1/50/200字符 3)保存</td>
-                        <td className="px-3 py-2 align-top">系统校验长度，超限显示错误，允许范围内保存成功</td>
-                      </tr>
-                      <tr className="border-t border-slate-100 bg-white/60">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-102</td>
-                        <td className="px-3 py-2 align-top">异常 · 删除已使用类型</td>
-                        <td className="px-3 py-2 align-top">已存在使用该类型的机构</td>
-                        <td className="px-3 py-2 align-top">1)尝试删除已使用的类型</td>
-                        <td className="px-3 py-2 align-top">系统提示无法删除，删除按钮禁用</td>
-                      </tr>
-                      <tr className="border-t border-slate-100">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-103</td>
-                        <td className="px-3 py-2 align-top">异常 · 大量类型处理</td>
-                        <td className="px-3 py-2 align-top">存在100+个类型</td>
-                        <td className="px-3 py-2 align-top">1)加载类型列表 2)批量删除</td>
-                        <td className="px-3 py-2 align-top">系统正确处理，不卡顿，数据一致</td>
-                      </tr>
-                      <tr className="border-t border-slate-100 bg-white/60">
-                        <td className="px-3 py-2 align-top font-mono">TC-OT-104</td>
-                        <td className="px-3 py-2 align-top">异常 · 权限边界</td>
-                        <td className="px-3 py-2 align-top">存在不同权限账号</td>
-                        <td className="px-3 py-2 align-top">1)低权限账号尝试编辑/删除类型</td>
-                        <td className="px-3 py-2 align-top">系统拒绝操作，显示权限不足提示</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div className="mb-2 font-bold text-slate-800">操作说明</div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {[
+                    ['编辑', '弹出「编辑类型」弹窗，可修改名称与排序值，保存后列表即时更新'],
+                    ['删除（可用）', '弹出 confirm 确认对话框，确认后从列表移除，操作不可恢复'],
+                    ['删除（禁用）', 'orgCount > 0 时按钮置灰，hover 显示提示「该类型已被机构使用，无法删除」'],
+                    ['关联机构数链接', '点击后弹出「关联机构清单」弹窗，展示使用该类型的所有机构列表'],
+                  ].map(([op, desc]) => (
+                    <div key={op} className="flex gap-2 rounded-lg bg-slate-50 px-3 py-2 ring-1 ring-slate-100">
+                      <span className="font-bold text-slate-800 whitespace-nowrap">{op}</span>
+                      <span className="text-slate-600">{desc}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </section>
 
-          <div className="flex justify-center pt-6">
-            <Link href="/v1.9.0" className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-8 py-3 text-base font-bold text-white hover:bg-indigo-700">
-              ← 返回首页
-            </Link>
-          </div>
+          {/* 三、新增 / 编辑弹窗 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">三、新增 / 编辑弹窗</h2>
+              <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-sm font-semibold text-indigo-700">Modal · 两字段</span>
+            </div>
+            <div className="mb-3 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-100">
+              新增（点击「+ 新增类型」）与编辑（点击行内「编辑」）共用同一个弹窗，通过 <code className="rounded bg-slate-200 px-1 text-xs">editingId</code> 区分模式，标题分别显示「新增类型」和「编辑类型」，确认按钮文案分别为「确认」和「保存」。
+            </div>
+            <div className="space-y-3">
+              {[
+                {
+                  name: '类型名称',
+                  required: true,
+                  desc: '必填，文字输入框，placeholder「例如：官方机构」。为空时点击确认弹出 alert 提示「请填写类型名称」',
+                },
+                {
+                  name: '排序',
+                  required: false,
+                  desc: '数字输入框，默认值 10。值越小展示越靠前，建议步长 10 以便后续插入',
+                },
+              ].map((f) => (
+                <div key={f.name} className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+                  <div className="flex items-start gap-2 text-sm">
+                    <span className="mt-0.5 font-medium text-slate-800 whitespace-nowrap">{f.name}{f.required ? ' *' : ''}</span>
+                    <span className="text-slate-500">— {f.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 space-y-2 text-sm">
+              <div className="rounded-xl bg-indigo-50 px-4 py-3 text-indigo-800 ring-1 ring-indigo-100">
+                <span className="font-bold">新增逻辑：</span>系统自动生成编码（<code className="rounded bg-indigo-100 px-1 text-xs">type_&lt;timestamp&gt;</code>），orgCount 初始为 0，createdAt / updatedAt 取当前时间，保存后追加至列表末尾。
+              </div>
+              <div className="rounded-xl bg-amber-50 px-4 py-3 text-amber-800 ring-1 ring-amber-100">
+                <span className="font-bold">编辑逻辑：</span>仅允许修改 name 与 sort，code 与 orgCount 不变，updatedAt 更新为当前时间。编辑不影响已引用该类型的机构关联关系。
+              </div>
+            </div>
+          </section>
+
+          {/* 四、关联机构清单弹窗 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">四、关联机构清单弹窗</h2>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-sm font-semibold text-slate-600">Org Modal</span>
+            </div>
+            <div className="mb-3 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-100">
+              点击列表中「N 个机构」蓝色链接触发，弹窗标题「关联机构清单 - {'{类型名称}'}」，最大高度 384px 可滚动，底部「关闭」按钮退出。
+            </div>
+            <div className="overflow-hidden rounded-xl border border-slate-100">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead className="bg-slate-100 text-xs uppercase text-slate-500">
+                  <tr>
+                    <th className="px-3 py-2">机构名称</th>
+                    <th className="px-3 py-2">类型</th>
+                    <th className="px-3 py-2">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="px-3 py-2 font-semibold">晋江市教育局</td>
+                    <td className="px-3 py-2 text-slate-500">官方机构</td>
+                    <td className="px-3 py-2 text-indigo-600">查看</td>
+                  </tr>
+                  <tr className="bg-slate-50">
+                    <td className="px-3 py-2 font-semibold">晋江市第一中学</td>
+                    <td className="px-3 py-2 text-slate-500">官方机构</td>
+                    <td className="px-3 py-2 text-indigo-600">查看</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={3} className="px-3 py-2 text-xs text-slate-400">…更多机构（滚动加载）</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-3 text-sm text-slate-500">
+              无关联机构时弹窗内容区显示「暂无关联机构」占位提示。每行机构右侧「查看」按钮可跳转至对应机构详情页（原型占位）。
+            </div>
+          </section>
+
+          {/* 五、字段默认值 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">五、字段默认值（新增时）</h2>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-sm font-semibold text-slate-600">Defaults</span>
+            </div>
+            <div className="overflow-hidden rounded-xl border border-slate-100">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead className="bg-slate-100 text-xs uppercase text-slate-500">
+                  <tr>
+                    <th className="px-3 py-2">字段</th>
+                    <th className="px-3 py-2">默认值</th>
+                    <th className="px-3 py-2">说明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['类型名称', '空（必填）', '新增时必须填写，为空不可提交'],
+                    ['编码（code）', '系统自动生成', '格式 type_<timestamp>，不可手动输入'],
+                    ['排序', '10', '建议步长 10，方便后续在中间插入新类型'],
+                    ['关联机构数', '0', '新增时无关联，删除按钮可用'],
+                    ['创建时间', '当前时间', '提交时由前端取本地时间记录'],
+                    ['更新时间', '当前时间', '每次编辑保存时同步更新'],
+                  ].map(([f, d, note], i) => (
+                    <tr key={f} className={`border-t border-slate-100 ${i % 2 === 1 ? 'bg-slate-50' : ''}`}>
+                      <td className="px-3 py-2 font-medium whitespace-nowrap">{f}</td>
+                      <td className="px-3 py-2 text-slate-600">{d}</td>
+                      <td className="px-3 py-2 text-xs text-slate-400">{note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* 六、删除保护规则 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">六、删除保护规则</h2>
+              <span className="rounded-full bg-rose-50 px-2 py-0.5 text-sm font-semibold text-rose-600">Delete Guard</span>
+            </div>
+            <div className="space-y-2 text-sm">
+              {[
+                {
+                  cond: 'orgCount === 0',
+                  state: '可删除',
+                  color: 'bg-green-50 ring-green-100',
+                  textColor: 'text-green-800',
+                  desc: '删除按钮正常可点击（text-rose-600），点击后弹出 confirm 确认对话框，确认则从列表移除。',
+                },
+                {
+                  cond: 'orgCount > 0',
+                  state: '禁止删除',
+                  color: 'bg-rose-50 ring-rose-100',
+                  textColor: 'text-rose-800',
+                  desc: '删除按钮置灰（text-slate-300 cursor-not-allowed），hover 显示 title 提示「该类型已被机构使用，无法删除」。需先将相关机构改为其他类型后方可删除。',
+                },
+              ].map((r) => (
+                <div key={r.cond} className={`rounded-xl p-4 ring-1 ${r.color}`}>
+                  <div className={`mb-1 flex items-center gap-2 font-bold ${r.textColor}`}>
+                    <code className="rounded bg-white/60 px-1 text-xs">{r.cond}</code>
+                    <span>→ {r.state}</span>
+                  </div>
+                  <p className={`text-sm ${r.textColor}`}>{r.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 七、典型数据示例 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">七、典型数据示例</h2>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-sm font-semibold text-slate-600">Examples</span>
+            </div>
+            <div className="overflow-hidden rounded-xl border border-slate-100">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead className="bg-slate-100 text-xs uppercase text-slate-500">
+                  <tr>
+                    <th className="px-3 py-2">排序</th>
+                    <th className="px-3 py-2">类型名称</th>
+                    <th className="px-3 py-2">编码（code）</th>
+                    <th className="px-3 py-2">关联机构数</th>
+                    <th className="px-3 py-2">可删除</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['10', '官方机构', 'official_org', '12 个', '否'],
+                    ['20', '国企单位', 'state_owned', '5 个', '否'],
+                    ['30', '社会机构', 'social_org', '0', '是'],
+                  ].map(([sort, name, code, count, del_], i) => (
+                    <tr key={name} className={`border-t border-slate-100 ${i % 2 === 1 ? 'bg-slate-50' : ''}`}>
+                      <td className="px-3 py-2 text-slate-600">{sort}</td>
+                      <td className="px-3 py-2 font-semibold">{name}</td>
+                      <td className="px-3 py-2 font-mono text-xs text-slate-500">{code}</td>
+                      <td className={`px-3 py-2 ${count === '0' ? 'text-slate-400' : 'text-indigo-600 font-semibold'}`}>{count}</td>
+                      <td className={`px-3 py-2 font-semibold ${del_ === '是' ? 'text-green-600' : 'text-rose-500'}`}>{del_}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
         </div>
       </div>
     </main>

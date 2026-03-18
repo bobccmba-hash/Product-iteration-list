@@ -152,7 +152,7 @@ export default function PrdRankingPage() {
                   fields: [
                     { name: '展示人数', required: false, desc: '固定展示前 10 位，不可修改' },
                     { name: '分数计算规则', required: false, desc: '固定为「历史最高分」，取学生该游戏历史最高得分展示' },
-                    { name: '展示内容', required: false, desc: '固定展示：学生头像、学生编号、互动分数、我的学习表现、本次得分' },
+                    { name: '展示内容', required: false, desc: '固定展示：学生终端昵称（五位码，如 AB023）、互动分数、我的学习表现、本次得分' },
                   ],
                 },
                 {
@@ -278,10 +278,51 @@ export default function PrdRankingPage() {
             </div>
           </section>
 
-          {/* 七、页面路由汇总 */}
+          {/* 七、学生终端昵称规则 */}
           <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
             <div className="mb-3 flex items-center justify-between gap-2">
-              <h2 className="text-xl font-black">七、页面路由汇总</h2>
+              <h2 className="text-xl font-black">七、学生终端昵称规则</h2>
+              <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-sm font-semibold text-indigo-700">Nickname</span>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="rounded-xl bg-indigo-50 p-4 ring-1 ring-indigo-100">
+                <div className="mb-1 font-bold text-indigo-800">排行榜展示的学生标识为终端昵称，非真实姓名</div>
+                <p className="text-sm leading-relaxed text-indigo-900">
+                  学习之星排行榜在终端展示时，学生身份标识使用系统自动生成的「终端昵称」，保护学生隐私，同时确保跨校唯一性。
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl bg-indigo-50 p-4 ring-1 ring-indigo-100">
+                  <div className="mb-2 font-bold text-indigo-800">终端展示（学生看到的）</div>
+                  <div className="mb-2 font-mono text-2xl font-black text-indigo-900">AB023</div>
+                  <ul className="space-y-1 text-indigo-800">
+                    <li>• 格式：<span className="font-bold">2 位大写英文字母 + 3 位数字</span></li>
+                    <li>• 字母：从 26 个英文字母中随机组合</li>
+                    <li>• 数字：001 – 999 随机生成</li>
+                    <li>• 排行榜展示此五位码作为学生标识</li>
+                  </ul>
+                </div>
+                <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-100">
+                  <div className="mb-2 font-bold text-slate-800">管理后台显示</div>
+                  <div className="mb-2 font-mono text-2xl font-black text-slate-900">SCH001_AB023</div>
+                  <ul className="space-y-1 text-slate-600">
+                    <li>• 格式：<span className="font-bold">学校ID _ 五位昵称</span></li>
+                    <li>• 学校ID 用于区分不同学校学生</li>
+                    <li>• 确保跨校昵称不冲突，全局唯一</li>
+                    <li>• 后台可通过学校ID快速筛选</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800 ring-1 ring-amber-100">
+                <span className="font-bold">生成规则：</span>昵称在学生首次使用终端时由系统自动生成，不可手动修改。同一学生在所有终端、所有游戏中使用同一昵称，排行榜跨游戏展示一致。
+              </div>
+            </div>
+          </section>
+
+          {/* 八、页面路由汇总 */}
+          <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-xl font-black">八、页面路由汇总</h2>
               <span className="rounded-full bg-slate-100 px-2 py-0.5 text-sm font-semibold text-slate-600">Routes</span>
             </div>
             <div className="overflow-hidden rounded-xl border border-slate-100">

@@ -70,6 +70,22 @@ export default function GrowthDetailPage() {
                 <span>学校账户编号：{student?.schoolAccountId ?? '—'}</span>
                 <span>设备编号：{student?.deviceId ?? '—'}</span>
               </div>
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <div className="rounded-lg bg-slate-50 px-3 py-2 ring-1 ring-slate-100">
+                  <div className="text-[10px] font-bold text-slate-400">设备编号</div>
+                  <div className="mt-0.5 font-mono text-xs font-bold text-slate-800">{student?.deviceId ?? '—'}</div>
+                </div>
+                <div className="rounded-lg bg-indigo-50 px-3 py-2 ring-1 ring-indigo-100">
+                  <div className="text-[10px] font-bold text-indigo-400">学校终端昵称（后台）</div>
+                  <div className="mt-0.5 font-mono text-xs font-bold text-indigo-900">{student?.terminalNickname ?? '—'}</div>
+                </div>
+                <div className="rounded-lg bg-indigo-50 px-3 py-2 ring-1 ring-indigo-100">
+                  <div className="text-[10px] font-bold text-indigo-400">终端显示昵称</div>
+                  <div className="mt-0.5 font-mono text-xs font-bold text-indigo-900">
+                    {student?.terminalNickname ? (student.terminalNickname.split('_')[1] ?? '—') : '—'}
+                  </div>
+                </div>
+              </div>
               <div className="mt-1 text-xs text-slate-500 space-x-2">
                 <span>创建时间：{student?.createdAt ?? '—'}</span>
                 <span>首次互动：{student?.firstAt ?? '—'}</span>

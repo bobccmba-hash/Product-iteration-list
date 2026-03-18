@@ -120,6 +120,7 @@ export type StudentGrowthSummary = {
   deviceId?: string
   statusLabel?: string
   wechatBound?: boolean
+  terminalNickname?: string  // 学校终端昵称：后台展示为 schoolId_昵称，终端展示为纯五位昵称（2字母+3数字）
 }
 
 export const mockSchools = ['示例小学A', '示例小学B', '示例小学C', '示例小学D（新区）', '示例小学E（实验）']
@@ -606,6 +607,7 @@ export const mockStudents: StudentGrowthSummary[] = [
     deviceId: 'DEV-00123',
     statusLabel: '正常',
     wechatBound: true,
+    terminalNickname: 'SCH001_AB023',
   },
   {
     studentId: 'S_90002',
@@ -629,6 +631,7 @@ export const mockStudents: StudentGrowthSummary[] = [
     deviceId: 'DEV-00456',
     statusLabel: '待同步',
     wechatBound: false,
+    terminalNickname: 'SCH002_CD789',
   },
   {
     studentId: 'S_90003',
@@ -652,6 +655,7 @@ export const mockStudents: StudentGrowthSummary[] = [
     deviceId: 'DEV-00789',
     statusLabel: '正常',
     wechatBound: true,
+    terminalNickname: 'SCH003_EF123',
   },
   {
     studentId: 'S_90004',
@@ -675,6 +679,7 @@ export const mockStudents: StudentGrowthSummary[] = [
     deviceId: 'DEV-01234',
     statusLabel: '同步失败',
     wechatBound: false,
+    terminalNickname: 'SCH004_GH567',
   },
   {
     studentId: 'S_90005',
@@ -698,6 +703,7 @@ export const mockStudents: StudentGrowthSummary[] = [
     deviceId: 'DEV-01567',
     statusLabel: '待同步',
     wechatBound: true,
+    terminalNickname: 'SCH005_JK890',
   },
 ]
 

@@ -1,67 +1,104 @@
-name: Build Desktop Apps (macOS + Windows)
+name: Build Desktop Apps
 
 on:
   workflow_dispatch:
   push:
     tags:
-      - "v*"
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      - 'v*'
 
 jobs:
-  build-mac:
-    name: Build (macOS universal)
+  # ── macOS Apple Silicon (arm64) ──────────────────────────
+  build-mac-arm64:
+    name: macOS arm64
     runs-on: macos-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm ci
 
-      - name: Build & publish desktop packages (macOS arm64 + x64)
+      - name: Next build
+        run: npx next build
+
+      - name: Prepare standalone
+        run: node electron/prepare-standalone.cjs
+
+      - name: electron-builder (arm64)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run desktop:build -- --mac --x64 --arm64 --publish always
+        run: npx electron-builder --mac --arm64 --publish always
 
-      - name: Upload artifacts (dist-desktop)
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: dist-desktop-macOS
-          path: dist-desktop/**
+          name: dist-mac-arm64
+          path: dist-desktop/
           if-no-files-found: error
 
-  build-win:
-    name: Build (Windows x64)
-    runs-on: windows-latest
+  # ── macOS Intel (x64) ────────────────────────────────────
+  build-mac-x64:
+    name: macOS x64 (Intel)
+    runs-on: macos-13
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm ci
 
-      - name: Build & publish desktop packages (Windows)
+      - name: Next build
+        run: npx next build
+
+      - name: Prepare standalone
+        run: node electron/prepare-standalone.cjs
+
+      - name: electron-builder (x64)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run desktop:build -- --publish always
+        run: npx electron-builder --mac --x64 --publish always
 
-      - name: Upload artifacts (dist-desktop)
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: dist-desktop-Windows
-          path: dist-desktop/**
+          name: dist-mac-x64
+          path: dist-desktop/
+          if-no-files-found: error
+
+  # ── Windows x64 ──────────────────────────────────────────
+  build-win:
+    name: Windows x64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Next build
+        run: npx next build
+
+      - name: Prepare standalone
+        run: node electron/prepare-standalone.cjs
+
+      - name: electron-builder (win x64)
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx electron-builder --win --x64 --publish always
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-win-x64
+          path: dist-desktop/
           if-no-files-found: error

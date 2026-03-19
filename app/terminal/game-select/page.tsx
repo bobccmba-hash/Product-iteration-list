@@ -38,29 +38,36 @@ function Inner() {
 
   const [phase, setPhase] = useState<Phase>('bg-flow')
   const [isSlowing, setIsSlowing] = useState(false)
-  const [cards] = useState(() => {
-    const shuffled = [...ALL_GAMES].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, 6)
-  })
+  const [cards, setCards] = useState<typeof ALL_GAMES>(() => ALL_GAMES.slice(0, 6))
   const [visibleCards, setVisibleCards] = useState<number[]>([])
   const [highlightIdx, setHighlightIdx] = useState<number | null>(null)
   const [finalIdx, setFinalIdx] = useState<number | null>(null)
   const [progress, setProgress] = useState(0)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [bgParticles] = useState(() =>
-    Array.from({ length: BG_COUNT }, (_, i) => ({
-      id: i,
-      game: ALL_GAMES[i % ALL_GAMES.length],
-      x: Math.random() * 85 + 5,
-      y: Math.random() * 85 + 5,
-      dur: Math.random() * 6 + 5,
-      delay: Math.random() * 4,
-      opacity: Math.random() * 0.22 + 0.06,
-    }))
-  )
+  const [bgParticles, setBgParticles] = useState<Array<{
+    id: number; game: typeof ALL_GAMES[0]; x: number; y: number; dur: number; delay: number; opacity: number
+  }>>([])
+
+  // 客户端初始化随机值，避免 SSR hydration 不匹配
+  useEffect(() => {
+    const shuffled = [...ALL_GAMES].sort(() => Math.random() - 0.5)
+    setCards(shuffled.slice(0, 6))
+    setBgParticles(
+      Array.from({ length: BG_COUNT }, (_, i) => ({
+        id: i,
+        game: ALL_GAMES[i % ALL_GAMES.length],
+        x: Math.random() * 85 + 5,
+        y: Math.random() * 85 + 5,
+        dur: Math.random() * 6 + 5,
+        delay: Math.random() * 4,
+        opacity: Math.random() * 0.22 + 0.06,
+      }))
+    )
+  }, [])
 
   useEffect(() => {
+    if (cards.length === 0) return
     timerRef.current = setTimeout(() => {
       setPhase('gathering')
       cards.forEach((_, i) => {
@@ -68,7 +75,7 @@ function Inner() {
       })
     }, 1400)
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
-  }, [])
+  }, [cards])
 
   useEffect(() => {
     if (visibleCards.length === 6) {

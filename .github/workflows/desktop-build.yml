@@ -8,12 +8,21 @@ on:
 
 jobs:
   build:
-    name: Build (${{ matrix.os }})
+    name: Build (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        include:
+          - name: macOS Apple Silicon (arm64)
+            os: macos-latest
+            arch: arm64
+          - name: macOS Intel (x64)
+            os: macos-13
+            arch: x64
+          - name: Windows (x64)
+            os: windows-latest
+            arch: x64
 
     steps:
       - name: Checkout
@@ -28,13 +37,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build desktop packages
-        run: npm run desktop:build
+      - name: Build & publish desktop packages (macOS)
+        if: runner.os == 'macOS'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run desktop:build -- --mac --${{ matrix.arch }} --publish always
+
+      - name: Build & publish desktop packages (Windows)
+        if: runner.os == 'Windows'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run desktop:build -- --publish always
 
       - name: Upload artifacts (dist-desktop)
         uses: actions/upload-artifact@v4
         with:
-          name: dist-desktop-${{ matrix.os }}
+          name: dist-desktop-${{ matrix.name }}
           path: dist-desktop/**
           if-no-files-found: error
 

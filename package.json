@@ -8,11 +8,12 @@
     "build": "next build",
     "start": "next start -H 127.0.0.1",
     "desktop:dev": "node electron/dev-runner.cjs",
-    "desktop:build": "npm run build && node electron/prepare-standalone.cjs && electron-builder --publish never",
+    "desktop:build": "npm run build && node electron/prepare-standalone.cjs && electron-builder",
     "lint": "eslint"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.32",
+    "electron-updater": "^6.8.3",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
@@ -49,7 +50,13 @@
     ],
     "mac": {
       "target": [
-        "zip"
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
       ]
     },
     "win": {
@@ -57,6 +64,13 @@
         "nsis"
       ]
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "bobccmba-hash",
+        "repo": "Product-iteration-list"
+      }
+    ],
     "linux": {
       "target": [
         "AppImage"

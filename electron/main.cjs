@@ -20,6 +20,41 @@ function logLine(message) {
   }
 }
 
+// ── 自动更新 ──────────────────────────────────────────────
+function setupAutoUpdater() {
+  if (isDev) return; // 开发模式不检查更新
+  try {
+    const { autoUpdater } = require("electron-updater");
+    autoUpdater.autoDownload = true;        // 静默下载
+    autoUpdater.autoInstallOnAppQuit = true; // 退出时自动安装
+
+    autoUpdater.on("checking-for-update", () => logLine("[updater] checking for update"));
+    autoUpdater.on("update-available", (info) => logLine(`[updater] update available: ${info.version}`));
+    autoUpdater.on("update-not-available", () => logLine("[updater] up to date"));
+    autoUpdater.on("download-progress", (p) => logLine(`[updater] download ${Math.round(p.percent)}%`));
+    autoUpdater.on("update-downloaded", (info) => {
+      logLine(`[updater] update downloaded: ${info.version}`);
+      dialog.showMessageBox(mainWindow, {
+        type: "info",
+        title: "发现新版本",
+        message: `新版本 ${info.version} 已下载完成`,
+        detail: "应用将在下次退出时自动安装更新。",
+        buttons: ["立即重启安装", "稍后"],
+        defaultId: 0,
+      }).then(({ response }) => {
+        if (response === 0) autoUpdater.quitAndInstall();
+      });
+    });
+    autoUpdater.on("error", (err) => logLine(`[updater] error: ${err?.stack || err}`));
+
+    // 启动后 3 秒检查，避免影响启动速度
+    setTimeout(() => autoUpdater.checkForUpdates(), 3000);
+  } catch (err) {
+    logLine(`[updater] electron-updater not available: ${err?.message}`);
+  }
+}
+// ─────────────────────────────────────────────────────────
+
 process.on("uncaughtException", (err) => {
   logLine(`uncaughtException: ${err?.stack || err}`);
 });
@@ -153,6 +188,7 @@ if (!gotTheLock) {
   });
   app.whenReady().then(async () => {
     logLine(`App ready. isPackaged=${app.isPackaged}`);
+    setupAutoUpdater();
     const result = await createWindow();
     serverProcess = result.serverProcess;
 

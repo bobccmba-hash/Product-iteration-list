@@ -14,6 +14,7 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
     iconType: 'emoji',
     syncCity: '',
     layout: 'two-columns-one-row',
+    isOnline: true,
     cards: [
       { id: 'c1', title: '晋江清新旅游', image: '', jumpType: 'page', jumpTarget: '' },
       { id: 'c2', title: '晋江美食文化', image: '', jumpType: 'page', jumpTarget: '' },
@@ -91,9 +92,9 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-xs font-bold text-slate-500">前台管理 / 首页品牌管理 / 编辑</div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight">编辑品牌区域</h1>
-          <p className="mt-1 text-sm text-slate-600">编辑小程序首页的品牌展示区域配置（原型占位）。</p>
+          <div className="text-xs font-bold text-slate-500">前台管理 / 首页热门菜单 / 编辑详情</div>
+          <h1 className="mt-2 text-2xl font-black tracking-tight">编辑详情</h1>
+          <p className="mt-1 text-sm text-slate-600">热门菜单编辑</p>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/admin/home-brand">
@@ -143,17 +144,17 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
         </section>
 
         <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
-          <h2 className="mb-4 text-lg font-black">区域头部设置</h2>
+          <h2 className="mb-4 text-lg font-black">内容设置</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold">区域图标</label>
+              <label className="block text-sm font-bold">背景图片</label>
               <input type="file" accept="image/*" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
               <p className="mt-1 text-xs text-slate-500">图片比例：1:1</p>
             </div>
 
             <div>
               <label className="block text-sm font-bold">
-                主标题 <span className="text-red-600">*</span>
+                标题 <span className="text-red-600">*</span>
               </label>
               <div className="mt-2 space-y-2">
                 <div className="flex items-center gap-2">
@@ -288,6 +289,37 @@ export default function HomeBrandEditPage({ params }: { params: Promise<{ id: st
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* 上线设置 */}
+        <section className="rounded-2xl bg-white p-6 ring-1 ring-slate-200">
+          <h2 className="mb-4 text-lg font-black">上线设置</h2>
+          <div>
+            <div className="text-sm font-bold text-slate-900 mb-3">是否上线</div>
+            <div className="flex items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="isOnline"
+                  checked={section.isOnline === true}
+                  onChange={() => setSection({ ...section, isOnline: true })}
+                  className="h-4 w-4 accent-green-500"
+                />
+                <span className={`text-sm font-semibold ${section.isOnline ? 'text-green-600' : 'text-slate-500'}`}>是</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="isOnline"
+                  checked={section.isOnline === false}
+                  onChange={() => setSection({ ...section, isOnline: false })}
+                  className="h-4 w-4 accent-slate-500"
+                />
+                <span className={`text-sm font-semibold ${!section.isOnline ? 'text-slate-700' : 'text-slate-400'}`}>否</span>
+              </label>
+            </div>
+            <p className="mt-2 text-xs text-slate-500">选择「是」后该菜单将在首页对用户展示</p>
           </div>
         </section>
       </div>

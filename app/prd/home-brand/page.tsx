@@ -18,7 +18,7 @@ export default function PrdHomeBrandPage() {
           <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-2.5 py-1 text-sm font-bold text-amber-700 ring-1 ring-amber-200">
             <span>🏢</span><span>前台管理 · 首页品牌</span>
           </div>
-          <h1 className="text-3xl font-black tracking-tight">首页品牌管理 PRD</h1>
+          <h1 className="text-3xl font-black tracking-tight">首页热门菜单 PRD</h1>
           <p className="max-w-3xl text-base leading-relaxed text-slate-600">
             本文档定义小程序首页品牌展示区域的管理后台（v1.9.0）。运营人员通过本模块新增品牌区域、绑定同步城市、配置区域头部（图标 / 主标题）、选择卡片布局，并为每张卡片设置图片、标题与跳转目标，配置完成后发布至小程序首页对应城市展示。
           </p>
@@ -70,7 +70,7 @@ export default function PrdHomeBrandPage() {
             </div>
             <div className="space-y-4 text-sm">
               <div className="rounded-xl bg-slate-50 px-4 py-3 text-slate-600 ring-1 ring-slate-100">
-                页面顶部展示面包屑「前台管理 / 首页品牌管理」，右上角提供「返回后台首页」与「新增品牌区域」入口。列表支持按主标题 / 副标题关键词模糊筛选，点击「查询」触发过滤，「重置」清空搜索条件恢复全量列表。
+                页面顶部展示面包屑「前台管理 / 首页热门菜单」，右上角提供「返回后台首页」与「新增品牌区域」入口。列表支持按主标题 / 副标题关键词模糊筛选，点击「查询」触发过滤，「重置」清空搜索条件恢复全量列表。
               </div>
               <div>
                 <div className="mb-2 font-bold text-slate-800">列表字段</div>
@@ -228,7 +228,7 @@ export default function PrdHomeBrandPage() {
               <span className="rounded-full bg-slate-900 px-2 py-0.5 text-sm font-semibold text-slate-50">/admin/home-brand/[id]/detail</span>
             </div>
             <div className="mb-3 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600 ring-1 ring-slate-100">
-              只读查看页，顶部面包屑「前台管理 / 首页品牌管理 / 详情」，右上角提供「返回列表」与「去编辑」按钮。
+              只读查看页，顶部面包屑「前台管理 / 首页热门菜单 / 详情」，右上角提供「返回列表」与「去编辑」按钮。
             </div>
             <div className="grid gap-3 sm:grid-cols-2 text-sm">
               <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-100">

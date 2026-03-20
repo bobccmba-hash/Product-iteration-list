@@ -62,7 +62,7 @@ export default function HomeBrandDetailPage({ params }: { params: Promise<{ id: 
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-xs font-bold text-slate-500">前台管理 / 首页品牌管理 / 详情</div>
+          <div className="text-xs font-bold text-slate-500">前台管理 / 首页热门菜单 / 详情</div>
           <h1 className="mt-2 text-2xl font-black tracking-tight">品牌区域详情</h1>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <Tag tone={section.status === 'published' ? 'success' : 'neutral'}>{section.status === 'published' ? '已发布' : '草稿'}</Tag>

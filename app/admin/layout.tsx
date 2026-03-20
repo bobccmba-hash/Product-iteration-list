@@ -31,7 +31,7 @@ const nav = [
   {
     title: '前台管理',
     items: [
-      { href: '/admin/home-brand', label: '首页品牌管理' },
+      { href: '/admin/home-brand', label: '首页热门菜单' },
       { href: '/admin/comment-rules', label: '评论规则管理' },
     ],
   },

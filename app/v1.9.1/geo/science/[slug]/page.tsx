@@ -35,12 +35,13 @@ function jsonLdArticle(article: ScienceArticle) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 }
 
-export default function GeoScienceDetailPage({
+export default async function GeoScienceDetailPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
-  const article = getScienceBySlug(params.slug)
+  const { slug } = await params
+  const article = getScienceBySlug(slug)
   if (!article) notFound()
 
   const relatedActivities = ACTIVITIES.filter((a) => article.related_activity_ids.includes(a.slug)).slice(0, 3)

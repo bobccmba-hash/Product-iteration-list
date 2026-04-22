@@ -107,11 +107,15 @@ export default function GeoSpecPage() {
         <section>
           <h2 className="text-2xl font-black text-[#1a1e3a]">8. 页面字段规范</h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            {[['8.1 全站通用字段', FIELD_COMMON], ['8.2 活动详情字段', FIELD_ACTIVITY], ['8.3 合作表单字段', FIELD_COOP]].map(([title, items]) => (
+            {[
+              { title: '8.1 全站通用字段', items: FIELD_COMMON },
+              { title: '8.2 活动详情字段', items: FIELD_ACTIVITY },
+              { title: '8.3 合作表单字段', items: FIELD_COOP },
+            ].map(({ title, items }) => (
               <article key={title} className="rounded-2xl border border-[#d8defa] bg-[#f7f9ff] p-5">
                 <h3 className="text-sm font-black text-[#1a1e3a]">{title}</h3>
                 <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                  {(items as string[]).map((it) => <li key={it}>{it}</li>)}
+                  {items.map((it) => <li key={it}>{it}</li>)}
                 </ul>
               </article>
             ))}
@@ -121,11 +125,15 @@ export default function GeoSpecPage() {
         <section>
           <h2 className="text-2xl font-black text-[#1a1e3a]">9 / 10. 交互与状态机</h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
-            {[['按钮状态', CTA_STATES], ['合作表单状态', FORM_STATES], ['二维码组件状态', QR_STATES]].map(([title, items]) => (
+            {[
+              { title: '按钮状态', items: CTA_STATES },
+              { title: '合作表单状态', items: FORM_STATES },
+              { title: '二维码组件状态', items: QR_STATES },
+            ].map(({ title, items }) => (
               <article key={title} className="rounded-2xl border border-[#d8defa] bg-white p-5">
                 <h3 className="text-sm font-black text-[#1a1e3a]">{title}</h3>
                 <ul className="mt-3 space-y-2 text-sm text-slate-700">
-                  {(items as string[]).map((it) => <li key={it}>{it}</li>)}
+                  {items.map((it) => <li key={it}>{it}</li>)}
                 </ul>
               </article>
             ))}

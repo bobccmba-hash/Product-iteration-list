@@ -20,6 +20,7 @@ const sections = [
       { title: '新用户流程', desc: '首次使用的完整体验路径（9:16 竖屏）。', href: '/terminal/welcome?type=new' },
       { title: '老用户流程', desc: '返回用户的欢迎与任务展示流程。', href: '/terminal/welcome?type=returning' },
       { title: '简化流程', desc: '无成长系统的基础互动体验。', href: '/terminal/welcome?type=no-growth' },
+      { title: '全部机构改版', desc: '合作机构展示页 + 平台合作入口，面向宝妈与亲子家庭的研学平台移动端设计。', href: '/org-square' },
     ],
   },
   {

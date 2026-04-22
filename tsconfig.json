@@ -30,5 +30,11 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "tmp-webmd",
+    "tmp-webmd-src",
+    ".tmp-awesome-design-md",
+    "dist-desktop"
+  ]
 }

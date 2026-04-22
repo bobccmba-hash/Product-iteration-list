@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "tmp-webmd/**",
+    "tmp-webmd-src/**",
+    ".tmp-awesome-design-md/**",
+    "dist-desktop/**",
   ]),
 ]);
 

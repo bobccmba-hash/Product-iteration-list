@@ -1,4 +1,10 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+
+const AUTH_KEY = 'ai314_auth'
 
 const versions = [
   {
@@ -24,21 +30,46 @@ const versions = [
 ]
 
 export default function Home() {
+  const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const token = window.localStorage.getItem(AUTH_KEY)
+    if (token !== 'ok') {
+      router.replace('/login')
+    }
+  }, [router])
+
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <div className="border-b border-slate-200 bg-gradient-to-b from-slate-50 to-white">
-        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="space-y-4">
+        <div className="mx-auto flex max-w-4xl items-start justify-between px-4 py-6 sm:px-6 lg:px-8">
+          <div className="space-y-4 py-10">
             <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
               <span className="h-2 w-2 rounded-full bg-blue-500" />
               小黄鹿学园
             </div>
-            <h1 className="text-5xl font-black tracking-tight text-slate-900">
-              迭代列表
-            </h1>
+            <h1 className="text-5xl font-black tracking-tight text-slate-900">迭代列表</h1>
             <p className="max-w-2xl text-lg text-slate-600">
               研发迭代需求演示平台，记录每个版本的功能迭代内容。
             </p>
+          </div>
+          <div className="mt-2 flex flex-col items-end gap-2 text-right text-sm">
+            <div className="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+              当前用户：admin
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.localStorage.removeItem(AUTH_KEY)
+                }
+                router.replace('/login')
+              }}
+              className="text-xs font-semibold text-slate-500 hover:text-slate-900"
+            >
+              退出登录
+            </button>
           </div>
         </div>
       </div>
@@ -57,7 +88,9 @@ export default function Home() {
                     <h2 className="text-2xl font-black text-slate-900 group-hover:text-blue-700">
                       {v.title}
                     </h2>
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${v.statusColor}`}>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ${v.statusColor}`}
+                    >
                       {v.status}
                     </span>
                   </div>
@@ -67,7 +100,7 @@ export default function Home() {
                   </div>
                   <p className="text-slate-600">{v.desc}</p>
                 </div>
-                <div className="text-2xl text-slate-300 group-hover:text-blue-400 transition">→</div>
+                <div className="text-2xl text-slate-300 transition group-hover:text-blue-400">→</div>
               </div>
             </Link>
           ))}
